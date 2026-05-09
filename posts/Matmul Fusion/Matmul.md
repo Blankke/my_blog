@@ -2,7 +2,7 @@
 title: Matmul
 cover: false
 categories:
-  - 第一题 matmul fusion
+  - Matmul Fusion
 ---
 
 https://hao-ai-lab.github.io/cse234-w25/

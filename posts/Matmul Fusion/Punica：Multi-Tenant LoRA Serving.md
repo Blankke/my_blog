@@ -2,7 +2,7 @@
 title: "Punica: Multi-Tenant LoRA Serving"
 cover: false
 categories:
-  - 第一题 matmul fusion
+  - Matmul Fusion
 ---
 
 - 参考资料

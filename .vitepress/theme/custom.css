@@ -1,12 +1,42 @@
 html {
+  --doc-aside-width: 256px;
   --home-bg-color: #f4ffe5;
   --home-bg-glow: rgba(255, 255, 255, 0.34);
   --home-pattern-image: url("/patterns/skulls.png");
+  --home-surface-bg: rgba(255, 255, 255, 0.34);
+  --home-surface-bg-hover: rgba(255, 255, 255, 0.46);
+  --home-surface-border: rgba(94, 116, 78, 0.14);
+  --home-surface-border-hover: rgba(70, 120, 72, 0.24);
+  --home-surface-shadow: 0 1px 8px 0 rgba(49, 76, 37, 0.1);
+  --home-surface-shadow-hover: 0 2px 16px 0 rgba(49, 76, 37, 0.16);
+  --home-surface-inner-bg: rgba(255, 255, 255, 0.2);
+  --home-surface-inner-bg-hover: rgba(255, 255, 255, 0.34);
+  --home-surface-inner-border: rgba(80, 106, 72, 0.12);
+  --home-card-bg: var(--home-surface-bg);
+  --home-card-bg-hover: var(--home-surface-bg-hover);
+  --home-card-border: var(--home-surface-border);
+  --home-card-border-hover: var(--home-surface-border-hover);
+  --home-card-shadow: var(--home-surface-shadow);
+  --home-card-shadow-hover: var(--home-surface-shadow-hover);
+  --home-card-inner-bg: var(--home-surface-inner-bg);
+  --home-card-inner-bg-hover: var(--home-surface-inner-bg-hover);
+  --home-card-inner-border: var(--home-surface-inner-border);
+  --doc-surface-bg: rgba(255, 255, 255, 0.78);
 }
 
 html.dark {
   --home-bg-color: #2d3638;
   --home-bg-glow: rgba(255, 255, 255, 0.06);
+  --home-surface-bg: rgba(20, 20, 20, 0.7);
+  --home-surface-bg-hover: rgba(20, 20, 20, 0.78);
+  --home-surface-border: rgba(255, 255, 255, 0.08);
+  --home-surface-border-hover: rgba(67, 150, 255, 0.34);
+  --home-surface-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.6);
+  --home-surface-shadow-hover: 0 2px 16px 0 rgba(0, 0, 0, 0.7);
+  --home-surface-inner-bg: rgba(20, 20, 20, 0.46);
+  --home-surface-inner-bg-hover: rgba(26, 26, 26, 0.72);
+  --home-surface-inner-border: rgba(255, 255, 255, 0.08);
+  --doc-surface-bg: rgba(20, 20, 20, 0.76);
 }
 
 .VPHome {
@@ -21,8 +51,125 @@ html.dark {
   background-attachment: scroll, fixed;
 }
 
+.VPContent:not(.is-home) {
+  min-height: 100vh;
+  background-color: var(--home-bg-color) !important;
+  background-image:
+    linear-gradient(var(--doc-surface-bg), var(--doc-surface-bg)),
+    radial-gradient(circle at top, var(--home-bg-glow) 0, transparent 44%),
+    var(--home-pattern-image) !important;
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-position: center top, center top, left top;
+  background-attachment: scroll, scroll, fixed;
+}
+
+.VPNavBar:not(.home) {
+  background-color: var(--vp-nav-bg-color) !important;
+}
+
 .VPHome::before {
   content: none !important;
+}
+
+.VPDoc .aside-curtain {
+  display: none;
+}
+
+@media screen and (min-width: 1280px) {
+  .VPDoc .aside {
+    flex: 0 0 var(--doc-aside-width);
+    width: var(--doc-aside-width);
+    max-width: var(--doc-aside-width);
+  }
+
+  .VPDoc .aside-container {
+    width: max(176px, calc(var(--doc-aside-width) - 32px));
+  }
+}
+
+.doc-sidebar-resizer {
+  position: fixed;
+  top: var(--vp-nav-height);
+  bottom: 0;
+  z-index: calc(var(--vp-z-index-sidebar) + 2);
+  width: 8px;
+  cursor: col-resize;
+  transform: translateX(-50%);
+  touch-action: none;
+}
+
+.doc-sidebar-resizer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 2px;
+  border-radius: 2px;
+  background: transparent;
+  transition: background-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.doc-sidebar-resizer:hover::after,
+.doc-sidebar-resizing .doc-sidebar-resizer::after {
+  background: var(--vp-c-brand-1);
+  box-shadow: 0 0 0 1px var(--vp-c-brand-soft);
+}
+
+.doc-sidebar-resizer-right {
+  z-index: 9;
+}
+
+.doc-sidebar-resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+.doc-sidebar-resizing * {
+  cursor: col-resize !important;
+}
+
+@media screen and (max-width: 959px) {
+  .doc-sidebar-resizer {
+    display: none !important;
+  }
+}
+
+.VPHome .home-post-categories,
+.VPHome .blog-item,
+.VPHome .blog-info .card {
+  border: 1px solid var(--home-surface-border);
+  background: var(--home-surface-bg);
+  box-shadow: var(--home-surface-shadow);
+}
+
+.VPHome .home-post-categories:hover,
+.VPHome .blog-item:hover,
+.VPHome .blog-info .card:hover {
+  border-color: var(--home-surface-border-hover);
+  background: var(--home-surface-bg-hover);
+  box-shadow: var(--home-surface-shadow-hover);
+}
+
+.VPHome .home-post-category {
+  border-color: var(--home-surface-inner-border);
+  background: var(--home-surface-inner-bg);
+}
+
+.VPHome .home-post-category:hover {
+  border-color: var(--home-surface-border-hover);
+  background: var(--home-surface-inner-bg-hover);
+}
+
+.blog-footer .site-readme-link {
+  color: var(--vp-c-text-3);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.blog-footer .site-readme-link:hover {
+  color: var(--vp-c-brand-1);
+  text-decoration: underline;
 }
 
 .VPDoc .content main .obsidian-figure {

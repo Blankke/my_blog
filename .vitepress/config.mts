@@ -6,6 +6,7 @@ const theme = getThemeConfig({
   footer: {
     version: true,
     copyright: 'Blankke',
+    bottomMessage: '<a class="site-readme-link" href="/README">README</a>',
   },
   themeColor: 'el-blue',
   author: 'Blankke',
@@ -36,7 +37,8 @@ export default defineConfig({
         text: '文章',
         items: [
           { text: '文章归档', link: '/posts/' },
-          { text: 'Matmul Fusion 专题', link: '/posts/第一题matmul fusion/' },
+          { text: 'Matmul Fusion 专题', link: '/posts/Matmul Fusion/' },
+          { text: 'MIT S081 专题', link: '/posts/S081 xv6-labs-2021/' },
         ],
       },
       { text: '关于', link: '/about' },

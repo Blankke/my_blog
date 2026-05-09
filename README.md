@@ -1,3 +1,8 @@
+---
+publish: false
+cover: false
+---
+
 # Blankke's Blog
 
 基于 VitePress 和 `@sugarat/theme` 搭建的个人博客。
