@@ -1,6 +1,8 @@
 node_modules
 dist
 cache
+.vitepress/dist
+.vitepress/cache
 .temp
 .DS_Store
 .vercel

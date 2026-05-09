@@ -3,28 +3,17 @@ import { getThemeConfig, defineConfig } from '@sugarat/theme/node';
 const theme = getThemeConfig({
   footer: {
     version: true,
-    copyright: '朝倉みず',
+    copyright: 'Blankke',
   },
-  themeColor: 'el-green',
-  author: '朝倉みず',
-  comment: {
-    type: 'giscus',
-    options: {
-      repo: 'AsakuraMizu/blog',
-      repoId: 'R_kgDONlBY7g',
-      category: 'Comments',
-      categoryId: 'DIC_kwDONlBY7s4ClrOA',
-      inputPosition: 'top',
-    },
-    mobileMinify: true,
-  },
+  themeColor: 'el-blue',
+  author: 'Blankke',
 });
 
 export default defineConfig({
   extends: theme,
   lang: 'zh-cn',
-  title: "Mizu's Dev Blog",
-  description: 'Dev stuffs.',
+  title: "Blankke's Blog",
+  description: '记录学习、实践与一点点开源折腾。',
   lastUpdated: true,
   // 详见：https://vitepress.dev/zh/reference/site-config#head
   head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
@@ -38,12 +27,15 @@ export default defineConfig({
     sidebarMenuLabel: '相关文章',
     lastUpdatedText: '上次更新于',
 
-    logo: '/avatar.webp',
-    nav: [{ text: '首页', link: '/' }],
+    logo: '/avatar.png',
+    nav: [
+      { text: '首页', link: '/' },
+      { text: '关于', link: '/about' },
+    ],
     socialLinks: [
       {
         icon: 'github',
-        link: 'https://github.com/AsakuraMizu',
+        link: 'https://github.com/Blankke',
       },
     ],
   },
