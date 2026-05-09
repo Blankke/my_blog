@@ -1,3 +1,10 @@
+---
+title: Matmul
+cover: false
+categories:
+  - 第一题 matmul fusion
+---
+
 https://hao-ai-lab.github.io/cse234-w25/
 
 [karpathy/nanoGPT: The simplest, fastest repository for training/finetuning medium-sized GPTs.](https://github.com/karpathy/nanoGPT)

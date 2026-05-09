@@ -1,4 +1,6 @@
 import { getThemeConfig, defineConfig } from '@sugarat/theme/node';
+import mathjax3 from 'markdown-it-mathjax3';
+import { obsidianCompatPlugin } from './plugins/obsidian-compat';
 
 const theme = getThemeConfig({
   footer: {
@@ -30,6 +32,13 @@ export default defineConfig({
     logo: '/avatar.png',
     nav: [
       { text: '首页', link: '/' },
+      {
+        text: '文章',
+        items: [
+          { text: '文章归档', link: '/posts/' },
+          { text: 'Matmul Fusion 专题', link: '/posts/第一题matmul fusion/' },
+        ],
+      },
       { text: '关于', link: '/about' },
     ],
     socialLinks: [
@@ -50,5 +59,11 @@ export default defineConfig({
       importantLabel: '重要',
       cautionLabel: '小心',
     },
+    config(md) {
+      md.use(mathjax3);
+    },
+  },
+  vite: {
+    plugins: [obsidianCompatPlugin()],
   },
 });

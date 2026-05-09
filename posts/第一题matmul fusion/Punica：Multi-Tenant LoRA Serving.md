@@ -1,3 +1,10 @@
+---
+title: "Punica: Multi-Tenant LoRA Serving"
+cover: false
+categories:
+  - 第一题 matmul fusion
+---
+
 - 参考资料
     - [pp018 Punica - 论文精读学习笔记](https://mustbook.github.io/p2/2nd_folder/pp018%20Punica%20-%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html)
     - [剖析GPT推断中的批处理效应](https://abcdabcd987.com/2023/05/13/transformer-batching/)
