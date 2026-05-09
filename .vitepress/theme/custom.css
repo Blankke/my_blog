@@ -1,7 +1,7 @@
 html {
   --home-bg-color: #f4ffe5;
   --home-bg-glow: rgba(255, 255, 255, 0.34);
-  --home-pattern-image: url('/patterns/skulls.png');
+  --home-pattern-image: url("/patterns/skulls.png");
 }
 
 html.dark {
@@ -11,9 +11,11 @@ html.dark {
 
 .VPHome {
   background-color: var(--home-bg-color) !important;
-  background-image:
-    radial-gradient(circle at top, var(--home-bg-glow) 0, transparent 44%),
-    var(--home-pattern-image) !important;
+  background-image: radial-gradient(
+      circle at top,
+      var(--home-bg-glow) 0,
+      transparent 44%
+    ), var(--home-pattern-image) !important;
   background-repeat: no-repeat, repeat;
   background-position: center top, left top;
   background-attachment: scroll, fixed;
@@ -67,4 +69,68 @@ html.dark {
   border-radius: 8px;
   background: var(--vp-c-warning-soft);
   color: var(--vp-c-text-2);
+}
+
+.VPDoc .content main .custom-block.details[data-callout] {
+  border-color: var(--obsidian-callout-border);
+  color: var(--obsidian-callout-text);
+  background-color: var(--obsidian-callout-bg);
+}
+
+.VPDoc .content main .custom-block.details[data-callout] a,
+.VPDoc .content main .custom-block.details[data-callout] code {
+  color: var(--obsidian-callout-link);
+}
+
+.VPDoc .content main .custom-block.details[data-callout] a:hover,
+.VPDoc .content main .custom-block.details[data-callout] a:hover > code {
+  color: var(--obsidian-callout-link-hover);
+}
+
+.VPDoc .content main .custom-block.details[data-callout] code {
+  background-color: var(--obsidian-callout-code-bg);
+}
+
+.VPDoc .content main .custom-block.details[data-callout] summary {
+  margin-bottom: 0.5rem;
+}
+
+.VPDoc .content main .custom-block.details[data-callout]:not([open]) summary {
+  margin-bottom: 0;
+}
+
+.VPDoc .content main .custom-block.details[data-callout="info"] {
+  --obsidian-callout-bg: var(--vp-custom-block-info-bg);
+  --obsidian-callout-border: var(--vp-custom-block-info-border);
+  --obsidian-callout-code-bg: var(--vp-custom-block-info-code-bg);
+  --obsidian-callout-link: var(--vp-c-brand-1);
+  --obsidian-callout-link-hover: var(--vp-c-brand-2);
+  --obsidian-callout-text: var(--vp-custom-block-info-text);
+}
+
+.VPDoc .content main .custom-block.details[data-callout="tip"] {
+  --obsidian-callout-bg: var(--vp-custom-block-tip-bg);
+  --obsidian-callout-border: var(--vp-custom-block-tip-border);
+  --obsidian-callout-code-bg: var(--vp-custom-block-tip-code-bg);
+  --obsidian-callout-link: var(--vp-c-tip-1);
+  --obsidian-callout-link-hover: var(--vp-c-tip-2);
+  --obsidian-callout-text: var(--vp-custom-block-tip-text);
+}
+
+.VPDoc .content main .custom-block.details[data-callout="warning"] {
+  --obsidian-callout-bg: var(--vp-custom-block-warning-bg);
+  --obsidian-callout-border: var(--vp-custom-block-warning-border);
+  --obsidian-callout-code-bg: var(--vp-custom-block-warning-code-bg);
+  --obsidian-callout-link: var(--vp-c-warning-1);
+  --obsidian-callout-link-hover: var(--vp-c-warning-2);
+  --obsidian-callout-text: var(--vp-custom-block-warning-text);
+}
+
+.VPDoc .content main .custom-block.details[data-callout="danger"] {
+  --obsidian-callout-bg: var(--vp-custom-block-danger-bg);
+  --obsidian-callout-border: var(--vp-custom-block-danger-border);
+  --obsidian-callout-code-bg: var(--vp-custom-block-danger-code-bg);
+  --obsidian-callout-link: var(--vp-c-danger-1);
+  --obsidian-callout-link-hover: var(--vp-c-danger-2);
+  --obsidian-callout-text: var(--vp-custom-block-danger-text);
 }

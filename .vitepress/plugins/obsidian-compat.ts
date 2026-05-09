@@ -25,6 +25,13 @@ const calloutTypeMap: Record<string, string> = {
   warning: 'warning',
 };
 
+const calloutLabelMap: Record<string, string> = {
+  danger: '危险',
+  info: '信息',
+  tip: '提示',
+  warning: '警告',
+};
+
 function toPosixPath(value: string) {
   return value.split(path.sep).join('/');
 }
@@ -55,6 +62,28 @@ function resolveAttachment(markdownFile: string, target: string) {
   return null;
 }
 
+function escapeContainerTitle(value: string) {
+  return value.replace(/[{}]/g, '\\$&');
+}
+
+function renderCalloutFence(
+  containerType: string,
+  title: string,
+  collapseFlag?: '+' | '-',
+) {
+  if (!collapseFlag) {
+    return `::: ${containerType}${title ? ` ${escapeContainerTitle(title)}` : ''}`;
+  }
+
+  const attrs = [`data-callout="${containerType}"`];
+  if (collapseFlag === '+') {
+    attrs.unshift('open');
+  }
+
+  const resolvedTitle = title || calloutLabelMap[containerType] || '详细信息';
+  return `::: details ${escapeContainerTitle(resolvedTitle)} {${attrs.join(' ')}}`;
+}
+
 function transformObsidianCallouts(source: string) {
   const lines = source.split(/\r?\n/);
   const result: string[] = [];
@@ -68,13 +97,14 @@ function transformObsidianCallouts(source: string) {
       continue;
     }
 
-    const [, rawType, _collapseFlag, rawTitle] = match;
+    const [, rawType, rawCollapseFlag, rawTitle] = match;
     const typeParts = rawType.trim().split(/\s+/);
     const normalizedType = (typeParts.shift() || 'info').toLowerCase();
     const containerType = calloutTypeMap[normalizedType] || 'info';
     const title = rawTitle.trim() || typeParts.join(' ');
+    const collapseFlag = rawCollapseFlag as '+' | '-' | undefined;
 
-    result.push(`::: ${containerType}${title ? ` ${title}` : ''}`);
+    result.push(renderCalloutFence(containerType, title, collapseFlag));
 
     index += 1;
     while (index < lines.length && /^>\s?/.test(lines[index])) {
@@ -90,42 +120,42 @@ function transformObsidianCallouts(source: string) {
 }
 
 function renderObsidianEmbed(body: string, markdownFile: string, block = true) {
-    const [rawTarget, rawMeta] = body.split('|', 2);
-    const target = rawTarget.trim();
-    const meta = rawMeta?.trim();
-    const resolved = resolveAttachment(markdownFile, target);
+  const [rawTarget, rawMeta] = body.split('|', 2);
+  const target = rawTarget.trim();
+  const meta = rawMeta?.trim();
+  const resolved = resolveAttachment(markdownFile, target);
 
-    if (!resolved) {
-      return block
-        ? `<div class="obsidian-missing-asset">缺失附件：<code>${escapeHtml(target)}</code></div>`
-        : `<span class="obsidian-missing-asset-inline">缺失附件：<code>${escapeHtml(target)}</code></span>`;
+  if (!resolved) {
+    return block
+      ? `<div class="obsidian-missing-asset">缺失附件：<code>${escapeHtml(target)}</code></div>`
+      : `<span class="obsidian-missing-asset-inline">缺失附件：<code>${escapeHtml(target)}</code></span>`;
+  }
+
+  const alt = escapeHtml(path.basename(target, path.extname(target)));
+  const attrs = [
+    `src="${encodeURI(resolved)}"`,
+    `alt="${alt}"`,
+    'class="obsidian-embed-image"',
+    'loading="lazy"',
+    'decoding="async"',
+  ];
+
+  let caption = '';
+  if (meta) {
+    if (/^\d+$/.test(meta)) {
+      attrs.push(`width="${meta}"`);
+    } else {
+      const safeMeta = escapeHtml(meta);
+      attrs.push(`title="${safeMeta}"`);
+      caption = `<figcaption>${safeMeta}</figcaption>`;
     }
+  }
 
-    const alt = escapeHtml(path.basename(target, path.extname(target)));
-    const attrs = [
-      `src="${encodeURI(resolved)}"`,
-      `alt="${alt}"`,
-      'class="obsidian-embed-image"',
-      'loading="lazy"',
-      'decoding="async"',
-    ];
+  if (!block) {
+    return `<img ${attrs.join(' ')} />`;
+  }
 
-    let caption = '';
-    if (meta) {
-      if (/^\d+$/.test(meta)) {
-        attrs.push(`width="${meta}"`);
-      } else {
-        const safeMeta = escapeHtml(meta);
-        attrs.push(`title="${safeMeta}"`);
-        caption = `<figcaption>${safeMeta}</figcaption>`;
-      }
-    }
-
-    if (!block) {
-      return `<img ${attrs.join(' ')} />`;
-    }
-
-    return `<figure class="obsidian-figure"><img ${attrs.join(' ')} />${caption}</figure>`;
+  return `<figure class="obsidian-figure"><img ${attrs.join(' ')} />${caption}</figure>`;
 }
 
 function transformObsidianEmbeds(source: string, markdownFile: string) {
@@ -151,7 +181,8 @@ function transformObsidianEmbeds(source: string, markdownFile: string) {
 
     result.push(
       line.replace(/!\[\[([^\]\n]+)\]\]/g, (_fullMatch, body: string) =>
-        renderObsidianEmbed(body, markdownFile, false))
+        renderObsidianEmbed(body, markdownFile, false),
+      ),
     );
   }
 
