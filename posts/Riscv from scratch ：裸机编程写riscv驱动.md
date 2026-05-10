@@ -1,6 +1,10 @@
 ---
 title: Riscv from scratch ：裸机编程写riscv驱动
 cover: false
+tags:
+  - riscv
+  - bare-metal
+  - driver
 ---
 
 ```c

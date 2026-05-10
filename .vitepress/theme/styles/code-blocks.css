@@ -1,0 +1,28 @@
+.VPDoc .content main pre.vp-code code {
+  counter-reset: code-line;
+  white-space: normal;
+}
+
+.VPDoc .content main pre.vp-code code .line {
+  display: block;
+  position: relative;
+  white-space: pre;
+  padding-left: calc(
+    var(--codeblock-line-number-width) + var(--codeblock-line-number-gap)
+  );
+}
+
+.VPDoc .content main pre.vp-code code .line::before {
+  counter-increment: code-line;
+  content: counter(code-line);
+  position: absolute;
+  left: 0;
+  width: var(--codeblock-line-number-width);
+  color: var(--codeblock-line-number-color);
+  text-align: right;
+  user-select: none;
+}
+
+.VPDoc .content main pre.vp-code code .line.diff::before {
+  opacity: 0.72;
+}

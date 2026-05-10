@@ -1,3 +1,5 @@
 @import "./styles/design-tokens.css";
 @import "./styles/blog-layout.css";
 @import "./styles/obsidian.css";
+@import "./styles/content-typography.css";
+@import "./styles/code-blocks.css";

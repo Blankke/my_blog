@@ -1,0 +1,83 @@
+html {
+  --vp-font-family-base: var(--font-family-base);
+  --vp-font-family-mono: var(--font-family-code);
+}
+
+.VPDoc .content main {
+  font-family: var(--font-family-base);
+}
+
+.VPDoc .content .vp-doc h1 {
+  color: var(--heading-h1-color);
+}
+
+.VPDoc .content .vp-doc h2 {
+  color: var(--heading-h2-color);
+}
+
+.VPDoc .content .vp-doc h3 {
+  color: var(--heading-h3-color);
+}
+
+.VPDoc .content .vp-doc h4 {
+  color: var(--heading-h4-color);
+}
+
+.VPDoc .content .vp-doc h5 {
+  color: var(--heading-h5-color);
+}
+
+.VPDoc .content .vp-doc h6 {
+  color: var(--heading-h6-color);
+}
+
+.VPDoc .content main a {
+  color: var(--content-link-color);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  text-decoration-color: var(--content-link-underline-color);
+}
+
+.VPDoc .content main a:hover {
+  color: var(--content-link-color-hover);
+}
+
+.VPDoc .content main :not(pre) > code,
+.VPDoc .content main li code,
+.VPDoc .content main p code,
+.VPDoc .content main td code,
+.VPDoc .content main blockquote code {
+  color: var(--content-inline-code-color);
+  font-family: var(--font-family-code);
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+
+.VPDoc .content main .custom-block[data-callout] a {
+  color: var(--content-link-color);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  text-decoration-color: var(--content-link-underline-color);
+}
+
+.VPDoc .content main .custom-block[data-callout] a:hover,
+.VPDoc .content main .custom-block[data-callout] a:hover > code {
+  color: var(--content-link-color-hover);
+}
+
+.VPDoc .content main .custom-block[data-callout] :not(pre) > code,
+.VPDoc .content main .custom-block[data-callout] li code,
+.VPDoc .content main .custom-block[data-callout] p code,
+.VPDoc .content main .custom-block[data-callout] td code,
+.VPDoc .content main .custom-block[data-callout] blockquote code {
+  color: var(--content-inline-code-color);
+  font-family: var(--font-family-code);
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}

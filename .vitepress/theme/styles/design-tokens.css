@@ -79,6 +79,25 @@ html {
 
   --footer-link-font-size: 12px;
 
+  --font-family-base: "Comic Sans MS", "Microsoft YaHei", "微软雅黑",
+    "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+  --font-family-code: "Consolas", "Cascadia Code", "Cascadia Mono",
+    "SFMono-Regular", "Menlo", "Monaco", "Liberation Mono", monospace;
+
+  --heading-h1-color: #4d86a7;
+  --heading-h2-color: #4b8d81;
+  --heading-h3-color: #7a67c4;
+  --heading-h4-color: #a07c56;
+  --heading-h5-color: #6682ad;
+  --heading-h6-color: #7e8799;
+  --content-link-color: #2e63c6;
+  --content-link-color-hover: #1e4da8;
+  --content-link-underline-color: rgba(46, 99, 198, 0.38);
+  --content-inline-code-color: #7d6ff2;
+  --codeblock-line-number-width: 2.4rem;
+  --codeblock-line-number-gap: 0.9rem;
+  --codeblock-line-number-color: rgba(73, 79, 95, 0.48);
+
   --obsidian-figure-margin: 1.25rem auto;
   --obsidian-figure-radius: 12px;
   --obsidian-figure-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
@@ -113,4 +132,15 @@ html.dark {
   --home-surface-inner-bg-hover: rgba(26, 26, 26, 0.72);
   --home-surface-inner-border: rgba(255, 255, 255, 0.08);
   --doc-surface-bg: rgba(20, 20, 20, 0.76);
+  --heading-h1-color: #80d8ff;
+  --heading-h2-color: #71e6c9;
+  --heading-h3-color: #bba4ff;
+  --heading-h4-color: #f0c383;
+  --heading-h5-color: #9cc1ff;
+  --heading-h6-color: #c1c9d9;
+  --content-link-color: #7eb4ff;
+  --content-link-color-hover: #a2caff;
+  --content-link-underline-color: rgba(126, 180, 255, 0.42);
+  --content-inline-code-color: #ec9cf2;
+  --codeblock-line-number-color: rgba(212, 215, 227, 0.4);
 }

@@ -44,4 +44,5 @@ aside: false
 
 ## 独立文章
 
+- [Riscv from scratch ：裸机编程写riscv驱动](</posts/Riscv from scratch ：裸机编程写riscv驱动>)
 - [Hello World](/posts/hello-world)

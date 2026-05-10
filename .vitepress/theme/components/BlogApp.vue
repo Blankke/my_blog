@@ -20,6 +20,7 @@ import {
 import BlogHomeTitle from './BlogHomeTitle.vue';
 import CalloutEnhancer from './CalloutEnhancer.vue';
 import DocSidebarResizer from './DocSidebarResizer.vue';
+import FolderPostList from './FolderPostList.vue';
 import HomePostCategories from './HomePostCategories.vue';
 
 const { frontmatter } = useData();
@@ -155,6 +156,7 @@ const openTransition = useDarkTransitionConfig();
     </template>
     <template #doc-bottom>
       <slot name="doc-bottom" />
+      <FolderPostList />
     </template>
 
     <template #aside-top>
