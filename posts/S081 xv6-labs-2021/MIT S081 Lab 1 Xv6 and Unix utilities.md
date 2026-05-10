@@ -3,7 +3,6 @@ title: "MIT S081 Lab 1: Xv6 and Unix utilities"
 cover: false
 categories:
   - MIT S081
-  - S081 xv6-labs-2021
 ---
 
 # MIT S081 Lab 1: Xv6 and Unix utilities

@@ -3,7 +3,6 @@ title: "MIT S081 补充: Findx 与 Buddy"
 cover: false
 categories:
   - MIT S081
-  - S081 xv6-labs-2021
 ---
 
 # MIT S081 补充: Findx 与 Buddy

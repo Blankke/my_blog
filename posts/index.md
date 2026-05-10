@@ -11,9 +11,9 @@ aside: false
 
 ### Matmul Fusion
 
-- [Matmul](</posts/Matmul Fusion/Matmul>)
+- [Matmul学习笔记](</posts/Matmul Fusion/Matmul学习笔记>)
 - [Graph](</posts/Matmul Fusion/graph>)
-- [任务一](</posts/Matmul Fusion/任务一>)
+- [问题1：Triton矩阵乘算子融合](</posts/Matmul Fusion/问题1：Triton矩阵乘算子融合>)
 - [Punica: Multi-Tenant LoRA Serving](</posts/Matmul Fusion/Punica：Multi-Tenant LoRA Serving>)
 
 ### MIT S081 xv6-labs-2021
@@ -31,6 +31,16 @@ aside: false
 - [MIT S081 Lab 10: FileSystem](</posts/S081 xv6-labs-2021/MIT S081 Lab 10 FileSystem>)
 - [MIT S081 Lab 11: mmap](</posts/S081 xv6-labs-2021/MIT S081 Lab 11 mmap>)
 - [MIT S081 补充: Findx 与 Buddy](</posts/S081 xv6-labs-2021/MIT S081 补充 Findx 与 Buddy>)
+
+### 2025春操作系统课程笔记
+
+- [操作系统到底在管理什么](</posts/2025春操作系统课程笔记/操作系统到底在管理什么>)
+- [从 mmap 理解进程地址空间](</posts/2025春操作系统课程笔记/从 mmap 理解进程地址空间>)
+- [把操作系统对象当成文件来访问](</posts/2025春操作系统课程笔记/把操作系统对象当成文件来访问>)
+- [终端、TTY 与 Unix Shell](</posts/2025春操作系统课程笔记/终端、TTY 与 Unix Shell>)
+- [程序是怎样被链接和加载的](</posts/2025春操作系统课程笔记/程序是怎样被链接和加载的>)
+- [设备、文件描述符与驱动程序](</posts/2025春操作系统课程笔记/设备、文件描述符与驱动程序>)
+- [并发控制为什么离不开互斥](</posts/2025春操作系统课程笔记/并发控制为什么离不开互斥>)
 
 ## 独立文章
 

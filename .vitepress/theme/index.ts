@@ -1,6 +1,6 @@
 import BlogTheme from '@sugarat/theme';
-import { withConfigProvider } from '../../node_modules/@sugarat/theme/src/composables/config/blog';
 import BlogApp from './components/BlogApp.vue';
+import { withConfigProvider } from './lib/sugarat';
 import './custom.css';
 
 export default {

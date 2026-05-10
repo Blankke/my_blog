@@ -37,6 +37,7 @@ export default defineConfig({
         text: '文章',
         items: [
           { text: '文章归档', link: '/posts/' },
+          { text: '2025春操作系统课程笔记', link: '/posts/2025春操作系统课程笔记/' },
           { text: 'Matmul Fusion 专题', link: '/posts/Matmul Fusion/' },
           { text: 'MIT S081 专题', link: '/posts/S081 xv6-labs-2021/' },
         ],

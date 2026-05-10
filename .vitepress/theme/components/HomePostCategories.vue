@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { withBase } from 'vitepress';
-import { useArticles } from '../../../node_modules/@sugarat/theme/src/composables/config/blog';
+import { useArticles } from '../lib/sugarat';
 
 interface FolderItem {
   count: number;
@@ -88,11 +88,11 @@ const folders = computed<FolderItem[]>(() => {
 .home-post-categories {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin: 0 0 20px;
-  padding: 16px 20px;
+  gap: var(--category-panel-gap);
+  margin: 0 0 var(--category-panel-margin-bottom);
+  padding: var(--category-panel-padding);
   border: 1px solid var(--home-surface-border);
-  border-radius: 0.25rem;
+  border-radius: var(--category-panel-radius);
   background: var(--home-surface-bg);
   box-shadow: var(--home-surface-shadow);
   box-sizing: border-box;
@@ -110,7 +110,7 @@ const folders = computed<FolderItem[]>(() => {
 }
 
 .home-post-categories-title {
-  font-size: 14px;
+  font-size: var(--category-panel-title-font-size);
   font-weight: 700;
   color: var(--vp-c-text-1);
   white-space: nowrap;
@@ -120,17 +120,17 @@ const folders = computed<FolderItem[]>(() => {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--category-panel-list-gap);
 }
 
 .home-post-category {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 34px;
-  padding: 6px 10px;
+  gap: var(--category-panel-item-gap);
+  min-height: var(--category-panel-item-min-height);
+  padding: var(--category-panel-item-padding);
   border: 1px solid var(--home-surface-inner-border);
-  border-radius: 8px;
+  border-radius: var(--category-panel-item-radius);
   background: var(--home-surface-inner-bg);
   color: var(--vp-c-text-1);
   line-height: 1.2;
@@ -145,33 +145,33 @@ const folders = computed<FolderItem[]>(() => {
 
 .home-post-category-mark {
   position: relative;
-  width: 16px;
-  height: 12px;
-  border: 1.5px solid var(--vp-c-brand-1);
-  border-radius: 3px;
+  width: var(--category-panel-mark-width);
+  height: var(--category-panel-mark-height);
+  border: var(--category-panel-mark-border-width) solid var(--vp-c-brand-1);
+  border-radius: var(--category-panel-mark-radius);
 }
 
 .home-post-category-mark::before {
   content: "";
   position: absolute;
-  top: -4px;
-  left: 1px;
-  width: 8px;
-  height: 4px;
-  border: 1.5px solid var(--vp-c-brand-1);
+  top: var(--category-panel-mark-tab-top);
+  left: var(--category-panel-mark-tab-left);
+  width: var(--category-panel-mark-tab-width);
+  height: var(--category-panel-mark-tab-height);
+  border: var(--category-panel-mark-border-width) solid var(--vp-c-brand-1);
   border-bottom: 0;
-  border-radius: 3px 3px 0 0;
+  border-radius: var(--category-panel-mark-radius) var(--category-panel-mark-radius) 0 0;
   background: inherit;
 }
 
 .home-post-category-name {
-  font-size: 14px;
+  font-size: var(--category-panel-name-font-size);
   font-weight: 600;
 }
 
 .home-post-category-count {
   color: var(--vp-c-text-2);
-  font-size: 12px;
+  font-size: var(--category-panel-count-font-size);
   white-space: nowrap;
 }
 
@@ -179,7 +179,7 @@ const folders = computed<FolderItem[]>(() => {
   .home-post-categories {
     align-items: flex-start;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--category-panel-gap-mobile);
   }
 
   .home-post-categories-list {

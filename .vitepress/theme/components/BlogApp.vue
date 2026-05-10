@@ -1,19 +1,24 @@
 <script setup lang="ts" name="BlogApp">
-import Theme from 'vitepress/theme';
 import { useData } from 'vitepress';
+import Theme from 'vitepress/theme';
 import { computed } from 'vue';
-import { useDarkTransition } from '../../../node_modules/@sugarat/theme/src/hooks/useDarkTransition';
-import { useBlogInfoCollapsible, useBlogThemeMode, useDarkTransitionConfig } from '../../../node_modules/@sugarat/theme/src/composables/config/blog';
-import BlogHomeInfo from '../../../node_modules/@sugarat/theme/src/components/BlogHomeInfo.vue';
-import BlogList from '../../../node_modules/@sugarat/theme/src/components/BlogList.vue';
-import BlogSidebar from '../../../node_modules/@sugarat/theme/src/components/BlogSidebar.vue';
-import BlogArticleAnalyze from '../../../node_modules/@sugarat/theme/src/components/BlogArticleAnalyze.vue';
-import BlogAlert from '../../../node_modules/@sugarat/theme/src/components/BlogAlert.vue';
-import BlogFooter from '../../../node_modules/@sugarat/theme/src/components/BlogFooter.vue';
-import BlogHomeHeaderAvatar from '../../../node_modules/@sugarat/theme/src/components/BlogHomeHeaderAvatar.vue';
-import BlogOml2d from '../../../node_modules/@sugarat/theme/src/components/BlogOml2d.vue';
-import BlogButtonAfterArticle from '../../../node_modules/@sugarat/theme/src/components/BlogButtonAfterArticle.vue';
+import {
+  BlogAlert,
+  BlogArticleAnalyze,
+  BlogButtonAfterArticle,
+  BlogFooter,
+  BlogHomeHeaderAvatar,
+  BlogHomeInfo,
+  BlogList,
+  BlogOml2d,
+  BlogSidebar,
+  useBlogInfoCollapsible,
+  useBlogThemeMode,
+  useDarkTransitionConfig,
+  useDarkTransition,
+} from '../lib/sugarat';
 import BlogHomeTitle from './BlogHomeTitle.vue';
+import CalloutEnhancer from './CalloutEnhancer.vue';
 import DocSidebarResizer from './DocSidebarResizer.vue';
 import HomePostCategories from './HomePostCategories.vue';
 
@@ -34,6 +39,7 @@ const openTransition = useDarkTransitionConfig();
       <slot name="layout-top" />
       <ClientOnly>
         <DocSidebarResizer />
+        <CalloutEnhancer />
         <BlogOml2d />
         <BlogAlert />
       </ClientOnly>
@@ -175,19 +181,19 @@ const openTransition = useDarkTransitionConfig();
 <style scoped>
 .home {
   margin: 0 auto;
-  padding: 20px;
-  max-width: 1126px;
+  padding: var(--layout-home-padding);
+  max-width: var(--layout-home-max-width);
 }
 
 @media screen and (min-width: 960px) {
   .home {
-    padding-top: calc(var(--vp-nav-height) - 16px);
+    padding-top: calc(var(--vp-nav-height) - var(--layout-home-nav-offset));
   }
 }
 
 .header-banner {
   width: 100%;
-  padding: 16px 0 12px;
+  padding: var(--layout-home-banner-padding);
 }
 
 .content-wrapper {
@@ -201,22 +207,22 @@ const openTransition = useDarkTransitionConfig();
 }
 
 .blog-info-wrapper {
-  margin-left: 16px;
+  margin-left: var(--layout-home-sidebar-gap);
   position: sticky;
-  top: 100px;
+  top: var(--layout-home-sidebar-top);
 }
 
 @media screen and (max-width: 959px) {
   .blog-info-wrapper {
-    margin-left: 16px;
+    margin-left: var(--layout-home-sidebar-gap);
     position: sticky;
-    top: 40px;
+    top: var(--layout-home-sidebar-top-mobile);
   }
 }
 
 @media screen and (max-width: 767px) {
   .header-banner {
-    padding: 12px 0 10px;
+    padding: var(--layout-home-banner-padding-mobile);
   }
 
   .content-wrapper {
@@ -224,7 +230,7 @@ const openTransition = useDarkTransitionConfig();
   }
 
   .blog-info-wrapper {
-    margin: 20px 0;
+    margin: var(--layout-home-sidebar-mobile-margin);
     width: 100%;
   }
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useData, withBase } from 'vitepress';
-import { useHomeConfig } from '../../../node_modules/@sugarat/theme/src/composables/config/blog';
+import { useHomeConfig } from '../lib/sugarat';
 
 const { site, frontmatter } = useData();
 const home = useHomeConfig();
@@ -119,36 +119,36 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   margin: 0;
-  min-height: 108px;
+  min-height: var(--home-title-min-height);
   line-height: 1;
 }
 
 .home-title-img {
   display: none;
   width: auto;
-  max-width: min(800px, 88vw);
-  max-height: 232px;
+  max-width: var(--home-title-image-max-width);
+  max-height: var(--home-title-image-max-height);
   object-fit: contain;
 }
 
 .home-title-fallback {
   display: none;
-  font-size: 36px;
+  font-size: var(--home-title-fallback-font-size);
   font-weight: 700;
   color: var(--vp-c-text-1);
 }
 
 .home-title-motto {
-  margin: 6px 0 0;
-  font-size: 15px;
+  margin: var(--home-title-motto-margin-top) 0 0;
+  font-size: var(--home-title-motto-font-size);
   font-weight: 400;
   line-height: 1.7;
   color: var(--vp-c-text-2);
 }
 
 .inspiring-wrapper {
-  margin: 16px 0 0;
-  height: 32px;
+  margin: var(--home-title-inspiring-margin-top) 0 0;
+  height: var(--home-title-inspiring-height);
   width: auto;
 }
 
@@ -156,7 +156,7 @@ onUnmounted(() => {
   animation: fade-in 0.5s ease-in-out;
   cursor: pointer;
   text-align: center;
-  font-size: 20px;
+  font-size: var(--home-title-inspiring-font-size);
   line-height: 1.6;
 }
 
@@ -169,21 +169,21 @@ onUnmounted(() => {
 
 @media screen and (max-width: 640px) {
   .home-title {
-    min-height: 78px;
+    min-height: var(--home-title-min-height-mobile);
   }
 
   .home-title-img {
-    max-width: min(560px, 92vw);
-    max-height: 166px;
+    max-width: var(--home-title-image-max-width-mobile);
+    max-height: var(--home-title-image-max-height-mobile);
   }
 
   .home-title-fallback {
-    font-size: 32px;
+    font-size: var(--home-title-fallback-font-size-mobile);
   }
 
   .home-title-motto {
-    margin-top: 6px;
-    font-size: 14px;
+    margin-top: var(--home-title-motto-margin-top);
+    font-size: var(--home-title-motto-font-size-mobile);
   }
 }
 

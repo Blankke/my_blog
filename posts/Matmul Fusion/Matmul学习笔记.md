@@ -1,16 +1,17 @@
 ---
-title: Matmul
+title: Matmul学习笔记
 cover: false
 categories:
   - Matmul Fusion
 ---
+>[!quote] 补充学习资料
+>https://hao-ai-lab.github.io/cse234-w25/
+>[karpathy/nanoGPT: The simplest, fastest repository for training/finetuning medium-sized GPTs.](https://github.com/karpathy/nanoGPT)
+>[代码来源](https://github.com/triton-lang/triton/blob/main/python/tutorials/03-matrix-multiplication.py)
+>[官方文档](https://triton-lang.org/main/getting-started/tutorials/03-matrix-multiplication.html)
 
-https://hao-ai-lab.github.io/cse234-w25/
 
-[karpathy/nanoGPT: The simplest, fastest repository for training/finetuning medium-sized GPTs.](https://github.com/karpathy/nanoGPT)
-
-
-### stride
+## stride
 stride[i] = 在第 i 个维度上索引 +1，底层一维内存地址要跳多少格。
 ![[Pasted image 20260425204352.png|1000]]
 二维的例子，行连续存储`stride[1]`，列每增加1，存储号增加4，`stride[2]`为4.
@@ -35,7 +36,7 @@ stride[i] = 在第 i 个维度上索引 +1，底层一维内存地址要跳多�
 ```
 然后两个向量相加时自动广播，一个列向量 `[M,1]` 和一个行向量 `[1,N]` 相加，会广播成一个 `[M,N]` 的矩阵。
 
->[!note]- 广播
+>[!note] 广播
 >这个和利用stride=0进行广播没有关系，用stride=0进行广播是利用了zero-copy所作的
 >![[Pasted image 20260426103745.png|500]]
 
@@ -71,7 +72,7 @@ b_ptrs += BLOCK_SIZE_K * stride_bk;
 ```
 ####  L2 Cache Optimizations
 后面就看不太懂了……先去把这一节课后面部分听一下[jan16.pdf](https://haoailab.com/cse234-w25/assets/slides/jan16.pdf)，然后再来
->[!Tip Matmul deep dive]-
+>[!Tip]-  Matmul deep dive
 >最基础的矩阵乘法结构是三层循环
 >![[Pasted image 20260426111531.png|800]]
 >更换为块状的乘法后类似与后面我们计算的方法，这是寄存器级别的优化，`v1*v3 + v2*v3 + v1*v2`需要少于ALU中包含的寄存器
@@ -87,7 +88,6 @@ b_ptrs += BLOCK_SIZE_K * stride_bk;
 >  ![[Pasted image 20260426155625.png|800]]
 >  到这里基本上就可以理解这个cache optimization了，然后接着来看教程
   
-##### Tut
 这里讲的又和上面的io次数好像关联不大了，是load数据重复使用的问题了，而不是算法。
 
 若是Row-major ordering，计算顺序是(0,0), (0,1), (0,2), ..., (0,8),  (1,0), (1,1), ...，此时行A的复用率很高，每一次都是使用的0，而B每次都切换，没有产生cache命中。这就是要用group ordering的原因
@@ -117,4 +117,3 @@ pid_n = (pid % num_pid_in_group) // group_size_m
 2   5   8
 ```
 
-#### result

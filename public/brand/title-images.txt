@@ -1,6 +1,0 @@
-Home title image placeholders:
-
-- blog-title-light.png
-- blog-title-dark.png
-
-The homepage falls back to text until these PNG files are added.

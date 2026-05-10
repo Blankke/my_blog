@@ -2,25 +2,26 @@
   "name": "blog",
   "private": true,
   "scripts": {
+    "clean": "rm -rf .vitepress/.temp .vitepress/cache .vitepress/dist",
+    "check": "biome check .",
     "dev": "vitepress dev",
+    "format": "biome format --write .",
     "build": "vitepress build",
     "serve": "vitepress serve",
+    "prepreview": "vitepress build",
     "preview": "vitepress serve"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.3.1",
     "@sugarat/theme": "^0.5.3",
-    "element-plus": "^2.9.1",
+    "lucide-vue-next": "^1.0.0",
     "vue": "3.5.13"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "markdown-it-mathjax3": "^4.3.2",
-    "pagefind": "^1.3.0",
-    "sass": "^1.83.0",
     "typescript": "^5.7.2",
     "vitepress": "^1.5.0"
   }

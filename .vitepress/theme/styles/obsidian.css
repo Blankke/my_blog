@@ -1,0 +1,194 @@
+.VPDoc .content main .obsidian-figure {
+  margin: var(--obsidian-figure-margin);
+  width: fit-content;
+  max-width: 100%;
+}
+
+.VPDoc .content main img.obsidian-embed-image {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: none;
+  margin: 0 auto;
+  border-radius: var(--obsidian-figure-radius);
+  box-shadow: var(--obsidian-figure-shadow);
+}
+
+.VPDoc .content main .obsidian-figure figcaption {
+  margin-top: var(--obsidian-caption-margin-top);
+  text-align: center;
+  color: var(--vp-c-text-2);
+  font-size: var(--obsidian-caption-font-size);
+}
+
+.VPDoc .content main .obsidian-missing-asset {
+  margin: var(--obsidian-missing-asset-margin);
+  padding: var(--obsidian-missing-asset-padding);
+  border: 1px dashed var(--vp-c-warning-1);
+  border-radius: var(--obsidian-missing-asset-radius);
+  background: var(--vp-c-warning-soft);
+  color: var(--vp-c-text-2);
+  font-size: var(--obsidian-missing-asset-font-size);
+}
+
+.VPDoc .content main .obsidian-missing-asset code {
+  font-size: var(--obsidian-missing-asset-code-font-size);
+}
+
+.VPDoc .content main .obsidian-missing-asset-inline {
+  display: inline-block;
+  margin: var(--obsidian-missing-inline-margin);
+  padding: var(--obsidian-missing-inline-padding);
+  border-radius: var(--obsidian-missing-inline-radius);
+  background: var(--vp-c-warning-soft);
+  color: var(--vp-c-text-2);
+}
+
+.VPDoc .content main .custom-block[data-callout] {
+  --obsidian-callout-rgb: 68, 138, 255;
+  --obsidian-callout-accent: rgb(var(--obsidian-callout-rgb));
+  --obsidian-callout-bg: rgba(var(--obsidian-callout-rgb), 0.12);
+  --obsidian-callout-border: rgba(var(--obsidian-callout-rgb), 0.35);
+  --obsidian-callout-code-bg: rgba(var(--obsidian-callout-rgb), 0.14);
+  --obsidian-callout-link: var(--obsidian-callout-accent);
+  --obsidian-callout-link-hover: var(--obsidian-callout-accent);
+  --obsidian-callout-text: var(--vp-c-text-1);
+  --obsidian-callout-title-text: var(--vp-c-text-1);
+  border-width: 1px 1px 1px 4px;
+  border-color: var(--obsidian-callout-border);
+  color: var(--obsidian-callout-text);
+  background-color: var(--obsidian-callout-bg);
+}
+
+.VPDoc .content main .custom-block[data-callout] a,
+.VPDoc .content main .custom-block[data-callout] code {
+  color: var(--obsidian-callout-link);
+}
+
+.VPDoc .content main .custom-block[data-callout] a:hover,
+.VPDoc .content main .custom-block[data-callout] a:hover > code {
+  color: var(--obsidian-callout-link-hover);
+}
+
+.VPDoc .content main .custom-block[data-callout] code {
+  background-color: var(--obsidian-callout-code-bg);
+}
+
+.VPDoc .content main .custom-block[data-callout] .custom-block-title,
+.VPDoc .content main .custom-block.details[data-callout] summary {
+  display: flex;
+  align-items: center;
+  gap: var(--obsidian-callout-title-gap);
+  margin: 0 0 var(--obsidian-callout-title-margin-bottom);
+  color: var(--obsidian-callout-title-text);
+  line-height: 1.35;
+  font-size: var(--obsidian-callout-title-font-size);
+  font-weight: 700;
+}
+
+.VPDoc
+  .content
+  main
+  .custom-block[data-callout]
+  .custom-block-title:not(.has-lucide-callout-icon)::before,
+.VPDoc
+  .content
+  main
+  .custom-block.details[data-callout]
+  summary:not(.has-lucide-callout-icon)::before {
+  content: "";
+  display: inline-flex;
+  width: var(--obsidian-callout-icon-size);
+  height: var(--obsidian-callout-icon-size);
+  flex: 0 0 var(--obsidian-callout-icon-size);
+}
+
+.VPDoc .content main .obsidian-callout-icon-host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--obsidian-callout-icon-size);
+  height: var(--obsidian-callout-icon-size);
+  border-radius: 999px;
+  background: rgba(var(--obsidian-callout-rgb), 0.18);
+  color: var(--obsidian-callout-accent);
+  flex: 0 0 var(--obsidian-callout-icon-size);
+}
+
+.VPDoc .content main .obsidian-callout-icon-host svg {
+  width: var(--obsidian-callout-icon-glyph-size);
+  height: var(--obsidian-callout-icon-glyph-size);
+  stroke: currentColor;
+}
+
+.VPDoc .content main .custom-block.details[data-callout] summary {
+  cursor: pointer;
+}
+
+.VPDoc .content main .custom-block.details[data-callout]:not([open]) summary {
+  margin-bottom: 0;
+}
+
+.VPDoc .content main .custom-block[data-callout] > :last-child {
+  margin-bottom: 0;
+}
+
+.VPDoc .content main .custom-block[data-callout] blockquote {
+  border-left-color: rgba(var(--obsidian-callout-rgb), 0.42);
+}
+
+.VPDoc .content main .custom-block[data-callout] .custom-block[data-callout] {
+  margin: var(--obsidian-nested-callout-margin);
+}
+
+.VPDoc .content main .custom-block[data-callout="note"] {
+  --obsidian-callout-rgb: 68, 138, 255;
+}
+
+.VPDoc .content main .custom-block[data-callout="abstract"] {
+  --obsidian-callout-rgb: 0, 191, 188;
+}
+
+.VPDoc .content main .custom-block[data-callout="info"] {
+  --obsidian-callout-rgb: 8, 109, 221;
+}
+
+.VPDoc .content main .custom-block[data-callout="todo"] {
+  --obsidian-callout-rgb: 68, 138, 255;
+}
+
+.VPDoc .content main .custom-block[data-callout="tip"] {
+  --obsidian-callout-rgb: 0, 191, 188;
+}
+
+.VPDoc .content main .custom-block[data-callout="success"] {
+  --obsidian-callout-rgb: 8, 185, 78;
+}
+
+.VPDoc .content main .custom-block[data-callout="question"] {
+  --obsidian-callout-rgb: 236, 117, 0;
+}
+
+.VPDoc .content main .custom-block[data-callout="warning"] {
+  --obsidian-callout-rgb: 236, 117, 0;
+}
+
+.VPDoc .content main .custom-block[data-callout="failure"] {
+  --obsidian-callout-rgb: 233, 49, 71;
+}
+
+.VPDoc .content main .custom-block[data-callout="danger"] {
+  --obsidian-callout-rgb: 233, 49, 71;
+}
+
+.VPDoc .content main .custom-block[data-callout="bug"] {
+  --obsidian-callout-rgb: 233, 49, 71;
+}
+
+.VPDoc .content main .custom-block[data-callout="example"] {
+  --obsidian-callout-rgb: 120, 82, 238;
+}
+
+.VPDoc .content main .custom-block[data-callout="quote"] {
+  --obsidian-callout-rgb: 108, 117, 125;
+}

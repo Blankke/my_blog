@@ -12,7 +12,7 @@ aside: false
 
 ## 文章列表
 
-- [Matmul](</posts/Matmul Fusion/Matmul>)
+- [Matmul学习笔记](</posts/Matmul Fusion/Matmul学习笔记>)
 - [Graph](</posts/Matmul Fusion/graph>)
-- [任务一](</posts/Matmul Fusion/任务一>)
+- [问题1：Triton矩阵乘算子融合](</posts/Matmul Fusion/问题1：Triton矩阵乘算子融合>)
 - [Punica: Multi-Tenant LoRA Serving](</posts/Matmul Fusion/Punica：Multi-Tenant LoRA Serving>)
