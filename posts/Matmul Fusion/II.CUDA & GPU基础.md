@@ -1,5 +1,5 @@
 ---
-title: CUDA & GPU 基础
+title: II.CUDA & GPU 基础
 cover: false
 categories:
   - Matmul Fusion
@@ -155,7 +155,7 @@ cudaMemcpy(deviceA, A, bytes, cudaMemcpyHostToDevice);
 >- 128 CUDA cores/SM
 >这里thread数目远大于core数目，为什么？
 >这里用到的32 个线程 = 1 warp
->在上面我们提到的SM 调度的是 warp，而wrap内部本身负责
+>在上面我们提到的SM 调度的是 warp，而warp内部本身负责
 >- 上下文切换
 >- 调度优先级
 >- 资源管理

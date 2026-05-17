@@ -51,18 +51,19 @@ function positionHandles() {
   const isHome = !!document.querySelector('.VPContent.is-home');
   const sidebar = document.querySelector<HTMLElement>('.VPSidebar');
   const docAside = document.querySelector<HTMLElement>('.VPDoc .aside');
+  const asideContainer = docAside?.querySelector<HTMLElement>('.aside-container') || null;
 
   showLeftHandle.value = isDesktop && !isHome && !!sidebar;
   showRightHandle.value = isWideDesktop && !isHome && !!docAside && docAside.offsetParent !== null;
 
   if (showLeftHandle.value && leftHandle.value && sidebar) {
     const rect = sidebar.getBoundingClientRect();
-    leftHandle.value.style.left = `${Math.round(rect.right - 3)}px`;
+    leftHandle.value.style.left = `${Math.round(rect.right)}px`;
   }
 
-  if (showRightHandle.value && rightHandle.value && docAside) {
-    const rect = docAside.getBoundingClientRect();
-    rightHandle.value.style.left = `${Math.round(rect.left - 4)}px`;
+  if (showRightHandle.value && rightHandle.value && (asideContainer || docAside)) {
+    const rect = (asideContainer || docAside).getBoundingClientRect();
+    rightHandle.value.style.left = `${Math.round(rect.left)}px`;
   }
 }
 

@@ -2,10 +2,9 @@ html {
   --doc-aside-width: 256px;
   --doc-aside-container-min-width: 176px;
   --doc-aside-container-offset: 32px;
-  --doc-sidebar-resizer-width: 8px;
-  --doc-sidebar-resizer-bar-offset: 3px;
+  --doc-sidebar-resizer-width: 18px;
   --doc-sidebar-resizer-bar-width: 2px;
-  --doc-sidebar-resizer-bar-radius: 2px;
+  --doc-sidebar-resizer-bar-radius: 999px;
 
   --layout-home-max-width: 1126px;
   --layout-home-padding: 20px;
@@ -116,6 +115,8 @@ html {
   --obsidian-callout-title-font-size: 0.95rem;
   --obsidian-callout-icon-size: 1.35rem;
   --obsidian-callout-icon-glyph-size: 0.92rem;
+  --obsidian-callout-fold-hint-size: 0.8rem;
+  --obsidian-callout-fold-hint-stroke: 2px;
   --obsidian-nested-callout-margin: 0.9rem 0 0.4rem;
 }
 

@@ -52,7 +52,7 @@
 
 .doc-sidebar-resizer {
   position: fixed;
-  top: var(--vp-nav-height);
+  top: calc(var(--vp-nav-height) - 1px);
   bottom: 0;
   z-index: calc(var(--vp-z-index-sidebar) + 2);
   width: var(--doc-sidebar-resizer-width);
@@ -66,10 +66,11 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  left: var(--doc-sidebar-resizer-bar-offset);
+  left: 50%;
   width: var(--doc-sidebar-resizer-bar-width);
   border-radius: var(--doc-sidebar-resizer-bar-radius);
   background: transparent;
+  transform: translateX(-50%);
   transition: background-color 0.18s ease, box-shadow 0.18s ease;
 }
 

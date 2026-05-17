@@ -125,6 +125,40 @@
   cursor: pointer;
 }
 
+.VPDoc .content main .custom-block.details[data-callout-fold] summary::-webkit-details-marker {
+  display: none;
+}
+
+.VPDoc .content main .custom-block.details[data-callout-fold] summary::marker {
+  content: "";
+}
+
+.VPDoc .content main .custom-block.details[data-callout-fold] summary::after {
+  content: "";
+  width: var(--obsidian-callout-fold-hint-size);
+  height: var(--obsidian-callout-fold-hint-size);
+  margin-left: auto;
+  flex: 0 0 auto;
+  border-right: var(--obsidian-callout-fold-hint-stroke) solid
+    currentColor;
+  border-bottom: var(--obsidian-callout-fold-hint-stroke) solid
+    currentColor;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  opacity: 0.7;
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.VPDoc .content main .custom-block.details[data-callout-fold][open] summary::after {
+  transform: rotate(45deg);
+}
+
+.VPDoc .content main .custom-block.details[data-callout-fold] summary:hover::after {
+  opacity: 1;
+}
+
 .VPDoc .content main .custom-block.details[data-callout]:not([open]) summary {
   margin-bottom: 0;
 }

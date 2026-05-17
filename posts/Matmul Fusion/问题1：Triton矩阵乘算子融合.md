@@ -174,7 +174,7 @@ def _fused_matmul_expand_kernel(
 ##### **tile 准备**
 开头处一些参数的解释
 - grid大小为`grid = (num_pid_m * num_pid_n,)`，每个program 负责一个`BLOCK_SIZE_M × BLOCK_SIZE_N`，
-- `(pid_m, pid_n)`是pid映射到二维的坐标，由于使用了group，这是通过`group_id`计算而得来的。这里的准备与[Matmul学习笔记](</posts/Matmul Fusion/Matmul学习笔记>)中讲到的一致
+- `(pid_m, pid_n)`是pid映射到二维的坐标，由于使用了group，这是通过`group_id`计算而得来的。这里的准备与[I.Matmul学习笔记](<I.Matmul学习笔记.md>)中讲到的一致
 - 也就是说，当前 program 负责`(pid_m, pid_n)`坐标处的矩阵计算，换算为矩阵写法就是
 ```python
 O[

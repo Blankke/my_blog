@@ -6,3 +6,4 @@ cache
 .temp
 .DS_Store
 .vercel
+.obsidian
