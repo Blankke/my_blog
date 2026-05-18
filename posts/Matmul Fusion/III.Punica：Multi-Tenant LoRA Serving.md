@@ -4,11 +4,12 @@ cover: false
 categories:
   - Matmul Fusion
 ---
-
+# III.Punica: Multi-Tenant LoRA Serving
 - 参考资料
     - [pp018 Punica - 论文精读学习笔记](https://mustbook.github.io/p2/2nd_folder/pp018%20Punica%20-%20%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html)
     - [剖析GPT推断中的批处理效应](https://abcdabcd987.com/2023/05/13/transformer-batching/)
 
+## SGMV
 设计了一个CUDA内核，叫做分段聚合矩阵向量乘法（SGMV）
 假设`W`的形状为`[H1, H2]`，它是预训练模型的权重，LoRA会添加两个小矩阵`A`形状为`[H1, r]`和`B`形状为`[r, H2]`。在微调模型上运行输入`x`的过程为`y := x @ (W + A@B)`，这与`y := x@W + x@A@B`相同。
 
@@ -44,7 +45,7 @@ s = [0, 3, 5, 7]
 现在我理解这个机制了，所以虚线箭头表示指针，这些权重全部存在权重池里，每次通过指针去取用。那么节省在哪了，这难道只有一个指针方法吗
 
 
-### 代码
+## 代码
 - 在sglang仓库中，`python/sglang/srt/lora/triton_ops/sgemm_lora_b.py`就是最简单的升维矩阵算子实现，
 - chunk方法是根据一个 batch 中的 token 数量，用启发式方法决定 chunk size。`_determine_chunk_size`调用`_determine_chunk_size_for_tokens`，根据token数量直接决定chunk的大小
     - 区别在于chunked的方法中每个segment都规范化为同样chunk大小了，相当于逐chunk选择LoRA adapter以及加载矩阵。

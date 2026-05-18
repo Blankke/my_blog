@@ -4,6 +4,7 @@ cover: false
 categories:
   - Matmul Fusion
 ---
+# I.Matmul学习笔记
 >[!quote] 补充学习资料
 >https://hao-ai-lab.github.io/cse234-w25/
 >[karpathy/nanoGPT: The simplest, fastest repository for training/finetuning medium-sized GPTs.](https://github.com/karpathy/nanoGPT)

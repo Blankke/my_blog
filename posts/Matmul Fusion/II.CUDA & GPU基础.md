@@ -6,9 +6,10 @@ categories:
 tags:
   - CSE234
 ---
+# II.CUDA & GPU 基础
 >[!quote] GPU的基本属性。
 >做问题一的时候总觉得少点什么，原来是缺了这一节课没有听，所以grid啥的知识点不明白。
-
+## 基础知识
 ![[Pasted image 20260510200059.png|800]]
 - SM/SMP（Streaming Multi-processor）
 

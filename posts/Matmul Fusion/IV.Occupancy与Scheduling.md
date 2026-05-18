@@ -4,9 +4,10 @@ cover: false
 categories:
   - Matmul Fusion
 ---
+# IV.Occupancy与Scheduling
 
-# 前置知识
-这一各版面主要回答的问题是
+## 前置知识
+这一个版面主要回答的问题是
 ***一个kernel的多个block是怎么在SM内和SM间怎么调度的；限制一个SM上同时执行多少个block的因素是哪三个？***
 ## 总流程
 我觉得我还需要知道triton整体的这个发射到调度的流程是怎么样的，先前有一些把triton和cuda搞混了。
@@ -113,7 +114,7 @@ if (blockIdx.x < 40)
 ```
 试图taskA 用前40个SM，taskB 用后40个SM。
 不过后续的waves可能就会打破这个规律。这时有一个做法是[persistent kernel](https://zhuanlan.zhihu.com/p/1974907485669320236)可以强制做这种复用
->[!example] 
+>[!example]-
 >启动 NumBlocks ≈ NumSMs，例如 108 个 persistent blocks
 >
 >每个 block 根据自己的 block_id 被分到两个 worker pool：
