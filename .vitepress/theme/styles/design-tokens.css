@@ -93,6 +93,9 @@ html {
   --content-link-color-hover: #1e4da8;
   --content-link-underline-color: rgba(46, 99, 198, 0.38);
   --content-inline-code-color: #7d6ff2;
+  --content-strong-em-color: #1048ff;
+  --content-strong-em-gradient-start: #1048ff;
+  --content-strong-em-gradient-end: #14c8ff;
   --codeblock-line-number-width: 2.4rem;
   --codeblock-line-number-gap: 0.9rem;
   --codeblock-line-number-color: rgba(73, 79, 95, 0.48);
@@ -143,5 +146,8 @@ html.dark {
   --content-link-color-hover: #a2caff;
   --content-link-underline-color: rgba(126, 180, 255, 0.42);
   --content-inline-code-color: #ec9cf2;
+  --content-strong-em-color: #43d3ff;
+  --content-strong-em-gradient-start: #43d3ff;
+  --content-strong-em-gradient-end: #baaaff;
   --codeblock-line-number-color: rgba(212, 215, 227, 0.4);
 }

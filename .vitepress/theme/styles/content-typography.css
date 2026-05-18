@@ -81,3 +81,22 @@ html {
   border-radius: 0;
   padding: 0;
 }
+
+.VPDoc .content main :where(em > strong, strong > em) {
+  color: var(--content-strong-em-color);
+  padding-right: 0.05em;
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .VPDoc .content main :where(em > strong, strong > em) {
+    background-image: linear-gradient(
+      120deg,
+      var(--content-strong-em-gradient-start) 0%,
+      var(--content-strong-em-gradient-end) 80%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+}
