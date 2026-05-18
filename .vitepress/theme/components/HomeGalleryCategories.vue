@@ -1,6 +1,13 @@
 <script setup lang="ts">
+import { Camera } from 'lucide-vue-next';
 import { withBase } from 'vitepress';
 import { computed } from 'vue';
+import {
+  GALLERY_SECTION,
+  type ThemeArticle,
+  getSectionFolderParts,
+  parseArticleDate,
+} from '../lib/articles';
 import { useArticles } from '../lib/sugarat';
 
 interface FolderItem {
@@ -21,69 +28,67 @@ function safeDecode(value: string) {
   }
 }
 
-function normalizeIndexRoute(route: string) {
-  return route.replace(/\/index$/, '/');
-}
-
 const folders = computed<FolderItem[]>(() => {
   const grouped = new Map<string, FolderItem>();
 
   for (const article of articles.value) {
-    const route = normalizeIndexRoute(article.route);
-    const match = route.match(/^\/posts\/([^/]+)\/(.*)$/);
-    if (!match) {
+    const folderParts = getSectionFolderParts(article.route, GALLERY_SECTION);
+    if (!folderParts || folderParts.isStandalone) {
       continue;
     }
 
-    const [, segment, rest] = match;
-    const title = safeDecode(segment);
-    const item = grouped.get(segment) || {
+    const title = safeDecode(folderParts.segment);
+    const item = grouped.get(folderParts.segment) || {
       count: 0,
       latest: 0,
-      link: `/posts/${segment}/`,
-      segment,
+      link: `/gallery/${folderParts.segment}/`,
+      segment: folderParts.segment,
       title,
     };
 
-    if (rest === '') {
+    if (folderParts.isFolderIndex) {
       item.title = article.meta.title || title;
-      item.link = route;
-    } else if (!article.meta.hidden) {
+      item.link = folderParts.normalizedRoute;
+    } else if (!(article as ThemeArticle).meta.hidden) {
       item.count += 1;
-      item.latest = Math.max(item.latest, +new Date(article.meta.date || 0));
+      item.latest = Math.max(item.latest, parseArticleDate(article.meta.date));
     }
 
-    grouped.set(segment, item);
+    grouped.set(folderParts.segment, item);
   }
 
   return Array.from(grouped.values())
     .filter((item) => item.count > 0)
-    .sort((a, b) => b.latest - a.latest || a.title.localeCompare(b.title));
+    .sort(
+      (a, b) => b.latest - a.latest || a.title.localeCompare(b.title, 'zh-CN'),
+    );
 });
 </script>
 
 <template>
-  <nav v-if="folders.length" class="home-post-categories" aria-label="文章文件夹">
-    <div class="home-post-categories-head">
-      <span class="home-post-categories-title">文章分类</span>
+  <nav v-if="folders.length" class="home-gallery-categories" aria-label="画廊文件夹">
+    <div class="home-gallery-categories-head">
+      <span class="home-gallery-categories-title">画廊分组</span>
     </div>
-    <div class="home-post-categories-list">
+    <div class="home-gallery-categories-list">
       <a
         v-for="folder in folders"
         :key="folder.segment"
-        class="home-post-category"
+        class="home-gallery-category"
         :href="withBase(folder.link)"
       >
-        <span class="home-post-category-mark" aria-hidden="true" />
-        <span class="home-post-category-name">{{ folder.title }}</span>
-        <span class="home-post-category-count">{{ folder.count }} 篇</span>
+        <span class="home-gallery-category-mark" aria-hidden="true">
+          <Camera :size="14" />
+        </span>
+        <span class="home-gallery-category-name">{{ folder.title }}</span>
+        <span class="home-gallery-category-count">{{ folder.count }} 篇</span>
       </a>
     </div>
   </nav>
 </template>
 
 <style scoped>
-.home-post-categories {
+.home-gallery-categories {
   display: flex;
   align-items: center;
   gap: var(--category-panel-gap);
@@ -97,31 +102,31 @@ const folders = computed<FolderItem[]>(() => {
   transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.home-post-categories:hover {
+.home-gallery-categories:hover {
   border-color: var(--home-surface-border-hover);
   background: var(--home-surface-bg-hover);
   box-shadow: var(--home-surface-shadow-hover);
 }
 
-.home-post-categories-head {
+.home-gallery-categories-head {
   flex: 0 0 auto;
 }
 
-.home-post-categories-title {
+.home-gallery-categories-title {
   font-size: var(--category-panel-title-font-size);
   font-weight: 700;
   color: var(--vp-c-text-1);
   white-space: nowrap;
 }
 
-.home-post-categories-list {
+.home-gallery-categories-list {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: var(--category-panel-list-gap);
 }
 
-.home-post-category {
+.home-gallery-category {
   display: inline-flex;
   align-items: center;
   gap: var(--category-panel-item-gap);
@@ -135,60 +140,51 @@ const folders = computed<FolderItem[]>(() => {
   transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
 }
 
-.home-post-category:hover {
+.home-gallery-category:hover {
   border-color: var(--home-surface-border-hover);
   background: var(--home-surface-inner-bg-hover);
   transform: translateY(-1px);
 }
 
-.home-post-category-mark {
-  position: relative;
-  width: var(--category-panel-mark-width);
-  height: var(--category-panel-mark-height);
-  border: var(--category-panel-mark-border-width) solid var(--vp-c-brand-1);
-  border-radius: var(--category-panel-mark-radius);
+.home-gallery-category-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(69, 120, 206, 0.2);
+  border-radius: 999px;
+  background: rgba(69, 120, 206, 0.08);
+  color: var(--vp-c-brand-1);
 }
 
-.home-post-category-mark::before {
-  content: "";
-  position: absolute;
-  top: var(--category-panel-mark-tab-top);
-  left: var(--category-panel-mark-tab-left);
-  width: var(--category-panel-mark-tab-width);
-  height: var(--category-panel-mark-tab-height);
-  border: var(--category-panel-mark-border-width) solid var(--vp-c-brand-1);
-  border-bottom: 0;
-  border-radius: var(--category-panel-mark-radius) var(--category-panel-mark-radius) 0 0;
-  background: inherit;
-}
-
-.home-post-category-name {
+.home-gallery-category-name {
   font-size: var(--category-panel-name-font-size);
   font-weight: 600;
 }
 
-.home-post-category-count {
+.home-gallery-category-count {
   color: var(--vp-c-text-2);
   font-size: var(--category-panel-count-font-size);
   white-space: nowrap;
 }
 
 @media screen and (max-width: 767px) {
-  .home-post-categories {
+  .home-gallery-categories {
     align-items: flex-start;
     flex-direction: column;
     gap: var(--category-panel-gap-mobile);
   }
 
-  .home-post-categories-list {
+  .home-gallery-categories-list {
     width: 100%;
   }
 
-  .home-post-category {
+  .home-gallery-category {
     max-width: 100%;
   }
 
-  .home-post-category-name {
+  .home-gallery-category-name {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

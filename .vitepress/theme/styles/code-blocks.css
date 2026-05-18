@@ -8,7 +8,8 @@
   position: relative;
   white-space: pre;
   padding-left: calc(
-    var(--codeblock-line-number-width) + var(--codeblock-line-number-gap)
+    var(--codeblock-line-number-width) +
+    var(--codeblock-line-number-gap)
   );
 }
 

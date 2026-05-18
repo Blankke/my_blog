@@ -2,7 +2,7 @@
   "name": "blog",
   "private": true,
   "scripts": {
-    "clean": "rm -rf .vitepress/.temp .vitepress/cache .vitepress/dist",
+    "clean": "node -e \"const fs=require('node:fs');['.vitepress/.temp','.vitepress/cache','.vitepress/dist'].forEach((dir)=>fs.rmSync(dir,{recursive:true,force:true}));\"",
     "check": "biome check .",
     "dev": "vitepress dev",
     "format": "biome format --write .",

@@ -1,5 +1,6 @@
-import { getThemeConfig, defineConfig } from '@sugarat/theme/node';
+import { defineConfig, getThemeConfig } from '@sugarat/theme/node';
 import mathjax3 from 'markdown-it-mathjax3';
+import { siteAudioLibraryPlugin } from './plugins/audio-library';
 import { obsidianCompatPlugin } from './plugins/obsidian-compat';
 
 const theme = getThemeConfig({
@@ -37,11 +38,15 @@ export default defineConfig({
         text: '文章',
         items: [
           { text: '文章归档', link: '/posts/' },
-          { text: '2025春操作系统课程笔记', link: '/posts/2025春操作系统课程笔记/' },
+          {
+            text: '2025春操作系统课程笔记',
+            link: '/posts/2025春操作系统课程笔记/',
+          },
           { text: 'Matmul Fusion 专题', link: '/posts/Matmul Fusion/' },
           { text: 'MIT S081 专题', link: '/posts/S081 xv6-labs-2021/' },
         ],
       },
+      { text: '画廊', link: '/?view=gallery' },
       { text: '关于', link: '/about' },
     ],
     socialLinks: [
@@ -67,6 +72,6 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [obsidianCompatPlugin()],
+    plugins: [obsidianCompatPlugin(), siteAudioLibraryPlugin()],
   },
 });

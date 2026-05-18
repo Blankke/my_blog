@@ -1,15 +1,21 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useData, withBase } from 'vitepress';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useHomeConfig } from '../lib/sugarat';
 
 const { site, frontmatter } = useData();
 const home = useHomeConfig();
 
 const name = computed(
-  () => (frontmatter.value.blog?.name ?? site.value.title) || home?.value?.name || '',
+  () =>
+    (frontmatter.value.blog?.name ?? site.value.title) ||
+    home?.value?.name ||
+    '',
 );
-const motto = computed(() => frontmatter.value.blog?.motto || home?.value?.motto || '');
+const motto = computed(
+  () => frontmatter.value.blog?.motto || home?.value?.motto || '',
+);
+const showMetaRow = computed(() => !!motto.value);
 
 const lightTitleImage = withBase('/brand/blog-title-light.png');
 const darkTitleImage = withBase('/brand/blog-title-dark.png');
@@ -21,12 +27,15 @@ const inspiringList = computed<string[]>(() => [
   ...new Set(
     [frontmatter.value.blog?.inspiring, home?.value?.inspiring]
       .flat()
-      .filter(v => !!v),
+      .filter((v) => !!v),
   ),
 ]);
 const inspiringIndex = ref<number>(-1);
 const inspiringTimeout = computed<number>(
-  () => frontmatter.value.blog?.inspiringTimeout || home?.value?.inspiringTimeout || 0,
+  () =>
+    frontmatter.value.blog?.inspiringTimeout ||
+    home?.value?.inspiringTimeout ||
+    0,
 );
 
 const timer = ref<ReturnType<typeof setTimeout> | undefined>();
@@ -49,7 +58,8 @@ async function changeSlogan() {
     return;
   }
 
-  inspiringIndex.value = (inspiringIndex.value + 1) % inspiringList.value.length;
+  inspiringIndex.value =
+    (inspiringIndex.value + 1) % inspiringList.value.length;
   const newValue = inspiringList.value[inspiringIndex.value];
   if (newValue === inspiring.value) {
     return;
@@ -100,7 +110,9 @@ onUnmounted(() => {
         {{ name }}
       </span>
     </h1>
-    <p v-show="motto" class="home-title-motto">{{ motto }}</p>
+    <div v-if="showMetaRow" class="home-title-meta">
+      <p v-show="motto" class="home-title-motto">{{ motto }}</p>
+    </div>
     <div class="inspiring-wrapper">
       <h2 v-show="!!inspiring" @click="changeSlogan">
         {{ inspiring }}
@@ -139,11 +151,19 @@ onUnmounted(() => {
 }
 
 .home-title-motto {
-  margin: var(--home-title-motto-margin-top) 0 0;
+  margin: 0;
   font-size: var(--home-title-motto-font-size);
   font-weight: 400;
   line-height: 1.7;
   color: var(--vp-c-text-2);
+}
+
+.home-title-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin: var(--home-title-motto-margin-top) 0 0;
 }
 
 .inspiring-wrapper {
@@ -182,8 +202,12 @@ onUnmounted(() => {
   }
 
   .home-title-motto {
-    margin-top: var(--home-title-motto-margin-top);
     font-size: var(--home-title-motto-font-size-mobile);
+  }
+
+  .home-title-meta {
+    flex-direction: column;
+    gap: 14px;
   }
 }
 

@@ -7,11 +7,16 @@ export { default as BlogHomeInfo } from '../../../node_modules/@sugarat/theme/sr
 export { default as BlogList } from '../../../node_modules/@sugarat/theme/src/components/BlogList.vue';
 export { default as BlogOml2d } from '../../../node_modules/@sugarat/theme/src/components/BlogOml2d.vue';
 export { default as BlogSidebar } from '../../../node_modules/@sugarat/theme/src/components/BlogSidebar.vue';
+export { default as Pagination } from '../../../node_modules/@sugarat/theme/src/components/Pagination.vue';
 export {
+  useActiveTag,
   useArticles,
   useBlogInfoCollapsible,
   useBlogThemeMode,
+  useCleanUrls,
+  useCurrentPageNum,
   useDarkTransitionConfig,
+  useGlobalAuthor,
   useHomeConfig,
   withConfigProvider,
 } from '../../../node_modules/@sugarat/theme/src/composables/config/blog';

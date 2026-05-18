@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vitepress';
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 const STORAGE_LEFT = 'blog-doc-left-sidebar-width';
 const STORAGE_RIGHT = 'blog-doc-right-aside-width';
@@ -36,8 +36,14 @@ function applyStoredWidths() {
   const leftMax = Math.min(420, Math.floor(viewport * 0.36));
   const rightMax = Math.min(420, Math.floor(viewport * 0.3));
 
-  setWidthVar('--vp-sidebar-width', clamp(readStoredWidth(STORAGE_LEFT, DEFAULT_LEFT), 220, leftMax));
-  setWidthVar('--doc-aside-width', clamp(readStoredWidth(STORAGE_RIGHT, DEFAULT_RIGHT), 208, rightMax));
+  setWidthVar(
+    '--vp-sidebar-width',
+    clamp(readStoredWidth(STORAGE_LEFT, DEFAULT_LEFT), 220, leftMax),
+  );
+  setWidthVar(
+    '--doc-aside-width',
+    clamp(readStoredWidth(STORAGE_RIGHT, DEFAULT_RIGHT), 208, rightMax),
+  );
 }
 
 function schedulePositionHandles() {
@@ -54,7 +60,8 @@ function positionHandles() {
   const asideContainer = docAside?.querySelector<HTMLElement>('.aside-container') || null;
 
   showLeftHandle.value = isDesktop && !isHome && !!sidebar;
-  showRightHandle.value = isWideDesktop && !isHome && !!docAside && docAside.offsetParent !== null;
+  showRightHandle.value =
+    isWideDesktop && !isHome && !!docAside && docAside.offsetParent !== null;
 
   if (showLeftHandle.value && leftHandle.value && sidebar) {
     const rect = sidebar.getBoundingClientRect();
@@ -67,33 +74,38 @@ function positionHandles() {
   }
 }
 
-function beginDrag(
-  event: PointerEvent,
-  side: 'left' | 'right',
-) {
+function beginDrag(event: PointerEvent, side: 'left' | 'right') {
   event.preventDefault();
   const viewport = window.innerWidth;
   const startX = event.clientX;
   const rootStyle = getComputedStyle(document.documentElement);
-  const startWidth = Number.parseFloat(
-    rootStyle.getPropertyValue(side === 'left' ? '--vp-sidebar-width' : '--doc-aside-width'),
-  ) || (side === 'left' ? DEFAULT_LEFT : DEFAULT_RIGHT);
+  const startWidth =
+    Number.parseFloat(
+      rootStyle.getPropertyValue(
+        side === 'left' ? '--vp-sidebar-width' : '--doc-aside-width',
+      ),
+    ) || (side === 'left' ? DEFAULT_LEFT : DEFAULT_RIGHT);
   const min = side === 'left' ? 220 : 208;
-  const max = side === 'left'
-    ? Math.min(420, Math.floor(viewport * 0.36))
-    : Math.min(420, Math.floor(viewport * 0.3));
+  const max =
+    side === 'left'
+      ? Math.min(420, Math.floor(viewport * 0.36))
+      : Math.min(420, Math.floor(viewport * 0.3));
 
   document.body.classList.add('doc-sidebar-resizing');
 
   function handleMove(moveEvent: PointerEvent) {
     const delta = moveEvent.clientX - startX;
-    const nextWidth = side === 'left'
-      ? startWidth + delta
-      : startWidth - delta;
+    const nextWidth = side === 'left' ? startWidth + delta : startWidth - delta;
     const width = clamp(nextWidth, min, max);
 
-    setWidthVar(side === 'left' ? '--vp-sidebar-width' : '--doc-aside-width', width);
-    window.localStorage.setItem(side === 'left' ? STORAGE_LEFT : STORAGE_RIGHT, `${Math.round(width)}`);
+    setWidthVar(
+      side === 'left' ? '--vp-sidebar-width' : '--doc-aside-width',
+      width,
+    );
+    window.localStorage.setItem(
+      side === 'left' ? STORAGE_LEFT : STORAGE_RIGHT,
+      `${Math.round(width)}`,
+    );
     schedulePositionHandles();
   }
 
@@ -113,8 +125,13 @@ function beginDrag(
 }
 
 function resetWidth(side: 'left' | 'right') {
-  window.localStorage.removeItem(side === 'left' ? STORAGE_LEFT : STORAGE_RIGHT);
-  setWidthVar(side === 'left' ? '--vp-sidebar-width' : '--doc-aside-width', side === 'left' ? DEFAULT_LEFT : DEFAULT_RIGHT);
+  window.localStorage.removeItem(
+    side === 'left' ? STORAGE_LEFT : STORAGE_RIGHT,
+  );
+  setWidthVar(
+    side === 'left' ? '--vp-sidebar-width' : '--doc-aside-width',
+    side === 'left' ? DEFAULT_LEFT : DEFAULT_RIGHT,
+  );
   schedulePositionHandles();
 }
 

@@ -56,6 +56,7 @@ npm run preview
 - `index.md`：首页配置
 - `about.md`：关于页
 - `posts/`：博客文章
+- `gallery/`：画廊内容目录
 - `public/`：静态资源
 - `.vitepress/config.mts`：站点主题与导航配置
 

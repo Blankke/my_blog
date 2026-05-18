@@ -3,3 +3,21 @@
 @import "./styles/obsidian.css";
 @import "./styles/content-typography.css";
 @import "./styles/code-blocks.css";
+
+html:not([data-home-view="gallery"])
+  .VPNavBarMenuLink.active[href="/?view=gallery"],
+html:not([data-home-view="gallery"])
+  .VPNavScreenMenuLink.active[href="/?view=gallery"] {
+  color: var(--vp-c-text-1) !important;
+  font-weight: 400 !important;
+}
+
+html[data-home-view="gallery"] .VPNavBarMenuLink[href="/"] {
+  color: var(--vp-c-text-2) !important;
+}
+
+html[data-home-view="gallery"] .VPNavBarMenuLink[href="/?view=gallery"],
+html[data-home-view="gallery"] .VPNavScreenMenuLink[href="/?view=gallery"] {
+  color: var(--vp-c-brand-1) !important;
+  font-weight: 600;
+}

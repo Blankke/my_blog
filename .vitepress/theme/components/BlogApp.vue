@@ -1,7 +1,9 @@
 <script setup lang="ts" name="BlogApp">
 import { useData } from 'vitepress';
 import Theme from 'vitepress/theme';
-import { computed } from 'vue';
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
+import { useAppearanceTransition } from '../lib/appearance-transition';
+import { useHomeView } from '../lib/home-view';
 import {
   BlogAlert,
   BlogArticleAnalyze,
@@ -9,18 +11,22 @@ import {
   BlogFooter,
   BlogHomeHeaderAvatar,
   BlogHomeInfo,
-  BlogList,
   BlogOml2d,
   BlogSidebar,
   useBlogInfoCollapsible,
   useBlogThemeMode,
   useDarkTransitionConfig,
-  useDarkTransition,
 } from '../lib/sugarat';
 import BlogHomeTitle from './BlogHomeTitle.vue';
+import BlogPageViews from './BlogPageViews.vue';
 import CalloutEnhancer from './CalloutEnhancer.vue';
 import DocSidebarResizer from './DocSidebarResizer.vue';
 import FolderPostList from './FolderPostList.vue';
+import GalleryFeed from './GalleryFeed.vue';
+import HomeAudioPlayer from './HomeAudioPlayer.vue';
+import HomeFeed from './HomeFeed.vue';
+import HomeGalleryCategories from './HomeGalleryCategories.vue';
+import HomeGalleryInfo from './HomeGalleryInfo.vue';
 import HomePostCategories from './HomePostCategories.vue';
 
 const { frontmatter } = useData();
@@ -29,13 +35,72 @@ const isBlogTheme = useBlogThemeMode();
 const { Layout } = Theme;
 
 const blogInfoCollapsible = useBlogInfoCollapsible();
+const { isGalleryView, isHomeRoute, setView, view } = useHomeView();
 
-useDarkTransition();
 const openTransition = useDarkTransitionConfig();
+const { canAnimateAppearance } = useAppearanceTransition(openTransition);
+const enableTransitionStyles = computed(
+  () => openTransition && canAnimateAppearance.value,
+);
+
+function handleHomeViewNavClick(event: MouseEvent) {
+  if (!isHomeRoute.value) {
+    return;
+  }
+
+  const target = event.target;
+  if (!(target instanceof Element)) {
+    return;
+  }
+
+  const link = target.closest<HTMLAnchorElement>(
+    'a.VPNavBarMenuLink[href="/"], a.VPNavBarMenuLink[href="/?view=gallery"], a.VPNavScreenMenuLink[href="/"], a.VPNavScreenMenuLink[href="/?view=gallery"]',
+  );
+
+  if (!link) {
+    return;
+  }
+
+  if (link.getAttribute('href') === '/?view=gallery') {
+    event.preventDefault();
+    setView('gallery');
+    return;
+  }
+
+  if (link.getAttribute('href') === '/' && isGalleryView.value) {
+    event.preventDefault();
+    setView('articles');
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleHomeViewNavClick);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleHomeViewNavClick);
+});
+
+watch(
+  view,
+  (nextView) => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    if (nextView === 'gallery') {
+      document.documentElement.dataset.homeView = 'gallery';
+      return;
+    }
+
+    delete document.documentElement.dataset.homeView;
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
-  <Layout :class="{ 'blog-theme-layout': openTransition }">
+  <Layout :class="{ 'blog-theme-layout': enableTransitionStyles }">
     <template #layout-top>
       <slot name="layout-top" />
       <ClientOnly>
@@ -50,6 +115,7 @@ const openTransition = useDarkTransitionConfig();
       <slot name="doc-before" />
       <ClientOnly>
         <BlogArticleAnalyze />
+        <BlogPageViews />
       </ClientOnly>
     </template>
 
@@ -64,10 +130,17 @@ const openTransition = useDarkTransitionConfig();
         <div class="header-banner">
           <BlogHomeTitle />
         </div>
+        <HomeAudioPlayer />
         <div class="content-wrapper">
           <div class="blog-list-wrapper">
-            <HomePostCategories />
-            <BlogList />
+            <div v-show="!isGalleryView">
+              <HomePostCategories />
+              <HomeFeed />
+            </div>
+            <div v-show="isGalleryView">
+              <HomeGalleryCategories />
+              <GalleryFeed embedded />
+            </div>
           </div>
           <div
             :class="{
@@ -75,7 +148,8 @@ const openTransition = useDarkTransitionConfig();
             }"
             class="blog-info-wrapper"
           >
-            <BlogHomeInfo />
+            <BlogHomeInfo v-show="!isGalleryView" />
+            <HomeGalleryInfo v-show="isGalleryView" />
           </div>
         </div>
       </div>

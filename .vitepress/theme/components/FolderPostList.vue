@@ -1,6 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { useData, useRoute, withBase } from 'vitepress';
+import { computed } from 'vue';
+import {
+  GALLERY_SECTION,
+  POSTS_SECTION,
+  getSectionFolderParts,
+  normalizeArticleRoute,
+  parseArticleDate,
+} from '../lib/articles';
 import { useArticles } from '../lib/sugarat';
 
 interface FolderArticleItem {
@@ -13,19 +20,6 @@ interface FolderArticleItem {
 const route = useRoute();
 const { frontmatter } = useData();
 const articles = useArticles();
-
-function safeDecode(value: string) {
-  try {
-    return decodeURIComponent(value);
-  }
-  catch {
-    return value;
-  }
-}
-
-function normalizeRoute(value: string) {
-  return safeDecode(value).replace(/\/index$/, '/');
-}
 
 function formatDate(rawValue: unknown) {
   if (!rawValue) {
@@ -44,32 +38,52 @@ function formatDate(rawValue: unknown) {
   }).format(date);
 }
 
-const folderSegment = computed(() => {
-  const match = normalizeRoute(route.path).match(/^\/posts\/([^/]+)\/$/);
-  return match?.[1] || '';
+const currentFolder = computed(() => {
+  const normalizedRoute = normalizeArticleRoute(route.path);
+  const sectionRoots = [POSTS_SECTION, GALLERY_SECTION];
+
+  for (const section of sectionRoots) {
+    const folderParts = getSectionFolderParts(normalizedRoute, section);
+    if (folderParts?.isFolderIndex) {
+      return {
+        section,
+        segment: folderParts.segment,
+      };
+    }
+  }
+
+  return null;
 });
 
 const isFolderIndexPage = computed(() => {
-  return Boolean(folderSegment.value) && frontmatter.value.publish === false;
+  return Boolean(currentFolder.value) && frontmatter.value.publish === false;
+});
+
+const listTitle = computed(() => {
+  if (currentFolder.value?.section === GALLERY_SECTION) {
+    return '画廊内容';
+  }
+
+  return '文章列表';
 });
 
 const items = computed<FolderArticleItem[]>(() => {
-  if (!folderSegment.value) {
+  if (!currentFolder.value) {
     return [];
   }
 
-  const prefix = `/posts/${folderSegment.value}/`;
-  const currentRoute = normalizeRoute(route.path);
+  const prefix = `/${currentFolder.value.section}/${currentFolder.value.segment}/`;
+  const currentRoute = normalizeArticleRoute(route.path);
 
   return articles.value
     .map((article) => {
-      const normalizedRoute = normalizeRoute(article.route);
+      const normalizedRoute = normalizeArticleRoute(article.route);
       return {
-        date: +new Date(article.meta.date || 0),
+        date: parseArticleDate(article.meta.date),
         description: article.meta.description || '',
         hidden: article.meta.hidden,
         href: normalizedRoute,
-        title: article.meta.title || safeDecode(normalizedRoute.slice(prefix.length)),
+        title: article.meta.title || normalizedRoute.slice(prefix.length),
       };
     })
     .filter((article) => {
@@ -90,7 +104,7 @@ const items = computed<FolderArticleItem[]>(() => {
 <template>
   <section v-if="isFolderIndexPage && items.length" class="folder-post-list">
     <div class="folder-post-list-head">
-      <h2 class="folder-post-list-title">文章列表</h2>
+      <h2 class="folder-post-list-title">{{ listTitle }}</h2>
       <span class="folder-post-list-count">{{ items.length }} 篇</span>
     </div>
     <div class="folder-post-list-items">
