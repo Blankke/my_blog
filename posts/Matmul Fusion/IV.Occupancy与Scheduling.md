@@ -26,20 +26,6 @@ grid = lambda meta: (triton.cdiv(m, meta["BLOCK_SIZE_M"]) * triton.cdiv(n, meta[
 ![[Pasted image 20260510213016.png|800]]
 
 一个SM可以容纳多个Block在其中驻留，然后SM内部根据warp为单位进行调度执行。一个SM中有多个warp可以轮换切着占用core。
->[!note]-  Warp 的形成规则
->当一个 Thread Block 被分配到 SM 上时，硬件会自动将其中的线程按 `threadIdx` 顺序分组为 Warp：
->
->```text
->Block 中的线程 ID    所属 Warp
->0 ~ 31              Warp 0
->32 ~ 63             Warp 1
->64 ~ 95             Warp 2
->...                 ...
->```
->
->关键点：Warp 的划分是硬件行为，程序员无法干预。一个包含 256 个线程的 Block 会被拆为 8 个 Warp。如果 Block 大小不是 32 的整数倍（如 48 个线程），最后一个 Warp 中多余的线程位置会被“填充”但不执行有效工作，这会浪费硬件资源。
->
->参考：[AIinfraGuide](https://caomaolufei.github.io/AIInfraGuide/guides/%E6%A8%A1%E5%9D%97%E4%BA%8C-cuda%E7%BC%96%E7%A8%8B%E4%B8%8E%E7%AE%97%E5%AD%90%E4%BC%98%E5%8C%96/21-warp%E4%B8%8E%E6%89%A7%E8%A1%8C%E6%A8%A1%E5%9E%8B/)
 
 限制的因素主要应该是：
 - shared memory（共享内存）
