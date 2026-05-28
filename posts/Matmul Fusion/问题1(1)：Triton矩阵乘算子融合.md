@@ -1,11 +1,11 @@
 ---
-title: 问题1：Triton矩阵乘算子融合
+title: 问题1(1)：Triton矩阵乘算子融合
 cover: false
 categories:
   - Matmul Fusion
 ---
 
-# 问题1：Triton矩阵乘算子融合
+# 问题1(1)：Triton矩阵乘算子融合
 >[!explain] 完成第一题的大致思路与代码实现
 
 ## 思路与前置知识
