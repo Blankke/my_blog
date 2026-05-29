@@ -11,10 +11,10 @@ aside: false
 
 ### Matmul Fusion
 
-- [I.Matmul学习笔记](</posts/Matmul Fusion/I.Matmul学习笔记>)
-- [Graph](</posts/Matmul Fusion/graph>)
+- [I.Matmul学习笔记](<I.Matmul学习笔记.md>)
+- [Graph](<IV.Graph Optimization 图优化.md>)
 - [问题1(1)：Triton矩阵乘算子融合](<问题1(1)：Triton矩阵乘算子融合.md>)
-- [Punica: Multi-Tenant LoRA Serving](</posts/Matmul Fusion/III.Punica：Multi-Tenant LoRA Serving>)
+- [Punica: Multi-Tenant LoRA Serving](<Punica：Multi-Tenant LoRA Serving.md>)
 
 ### MIT S081 xv6-labs-2021
 

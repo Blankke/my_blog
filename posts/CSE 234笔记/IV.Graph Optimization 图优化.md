@@ -1,12 +1,14 @@
 ---
-title: V.Graph Optimization 图优化
+title: IV.Graph Optimization 图优化
 cover: false
 categories:
   - Matmul Fusion
 tags:
   - CSE234
 ---
-# V.Graph Optimization 图优化
+# IV.Graph Optimization 图优化
+用到的论文: [TASO](https://dl.acm.org/doi/abs/10.1145/3341301.3359630)
+推荐阅读：[TVM](https://arxiv.org/pdf/1802.04799)
 ## symbolic vs imperative
 符号式的是整个都一起写好框架，然后再运行，所以数据是后注入的
 命令式的和python一样，是直接运行的，写一行执行一行

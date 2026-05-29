@@ -2,6 +2,7 @@ import { defineConfig, getThemeConfig } from '@sugarat/theme/node';
 import mathjax3 from 'markdown-it-mathjax3';
 import { siteAudioLibraryPlugin } from './plugins/audio-library';
 import { obsidianCompatPlugin } from './plugins/obsidian-compat';
+import { pdfPostsPlugin } from './plugins/pdf-posts';
 
 const theme = getThemeConfig({
   footer: {
@@ -72,6 +73,6 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [obsidianCompatPlugin(), siteAudioLibraryPlugin()],
+    plugins: [pdfPostsPlugin(), obsidianCompatPlugin(), siteAudioLibraryPlugin()],
   },
 });

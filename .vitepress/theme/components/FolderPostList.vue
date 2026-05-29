@@ -14,6 +14,7 @@ interface FolderArticleItem {
   date: number;
   description: string;
   href: string;
+  isPdf: boolean;
   title: string;
 }
 
@@ -78,11 +79,13 @@ const items = computed<FolderArticleItem[]>(() => {
   return articles.value
     .map((article) => {
       const normalizedRoute = normalizeArticleRoute(article.route);
+      const pdfUrl = (article.meta as Record<string, unknown>)._pdf_url as string | undefined;
       return {
         date: parseArticleDate(article.meta.date),
         description: article.meta.description || '',
         hidden: article.meta.hidden,
-        href: normalizedRoute,
+        href: pdfUrl ?? normalizedRoute,
+        isPdf: Boolean(pdfUrl),
         title: article.meta.title || normalizedRoute.slice(prefix.length),
       };
     })
@@ -112,10 +115,16 @@ const items = computed<FolderArticleItem[]>(() => {
         v-for="item in items"
         :key="item.href"
         class="folder-post-list-item"
-        :href="withBase(item.href)"
+        :class="{ 'folder-post-list-item--pdf': item.isPdf }"
+        :href="item.isPdf ? item.href : withBase(item.href)"
+        :target="item.isPdf ? '_blank' : undefined"
+        :rel="item.isPdf ? 'noopener' : undefined"
       >
         <div class="folder-post-list-item-head">
-          <h3 class="folder-post-list-item-title">{{ item.title }}</h3>
+          <h3 class="folder-post-list-item-title">
+            {{ item.title }}
+            <span v-if="item.isPdf" class="folder-post-list-item-pdf-badge">PDF</span>
+          </h3>
           <time v-if="item.date" class="folder-post-list-item-date">
             {{ formatDate(item.date) }}
           </time>
@@ -184,10 +193,26 @@ const items = computed<FolderArticleItem[]>(() => {
 }
 
 .folder-post-list-item-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
   margin: 0;
   color: var(--vp-c-text-1);
   font-size: 1rem;
   line-height: 1.5;
+}
+
+.folder-post-list-item-pdf-badge {
+  display: inline-block;
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  color: var(--vp-c-text-3);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+  flex-shrink: 0;
 }
 
 .folder-post-list-item-date {
