@@ -50,13 +50,9 @@ title: "${safeTitle}"
 date: ${date}
 _pdf_stub: true
 _pdf_url: "${pdfUrl}"
-head:
-  - - meta
-    - http-equiv: refresh
-      content: "0; url=${pdfUrl}"
 ---
 
-正在跳转到 PDF…[点击此处手动打开](${pdfUrl})
+[点击在新标签页中打开 PDF](${pdfUrl}){target="_blank" rel="noopener"}
 `;
 }
 
