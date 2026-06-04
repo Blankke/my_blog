@@ -3,6 +3,8 @@ import path from 'node:path';
 import type { Plugin } from 'vite';
 
 const PDF_STUB_MARKER = '_pdf_stub: true';
+const PDF_STUB_LINK_PATTERN =
+  /^\[点击在新标签页中打开 PDF\]\([^)]+\)\{target="_blank" rel="noopener"\}$/;
 
 function toPosixPath(value: string) {
   return value.split(path.sep).join('/');
@@ -37,23 +39,51 @@ function getDateFromFile(filePath: string): string {
   }
 }
 
-function generatePdfStub(pdfPath: string, postsDir: string): string {
+function generatePdfNotePage(pdfPath: string, postsDir: string): string {
   const relPath = toPosixPath(path.relative(postsDir, pdfPath));
   const title = path.basename(pdfPath, '.pdf');
   const date = getDateFromFile(pdfPath);
-  // URL-encode each path segment to handle spaces and CJK chars
+  // 分段编码 URL，兼容目录名里的空格和中文字符。
   const pdfUrl = `/posts/${relPath.split('/').map(encodeURIComponent).join('/')}`;
   const safeTitle = title.replace(/"/g, '\\"');
 
   return `---
 title: "${safeTitle}"
 date: ${date}
-_pdf_stub: true
 _pdf_url: "${pdfUrl}"
 ---
 
+# ${safeTitle}
+
 [点击在新标签页中打开 PDF](${pdfUrl}){target="_blank" rel="noopener"}
 `;
+}
+
+function getMarkdownBody(source: string) {
+  if (!source.startsWith('---')) {
+    return source;
+  }
+
+  const frontmatterEnd = source.indexOf('\n---', 3);
+  if (frontmatterEnd === -1) {
+    return source;
+  }
+
+  return source.slice(frontmatterEnd + '\n---'.length);
+}
+
+function isGeneratedPdfStub(source: string) {
+  if (!source.includes(PDF_STUB_MARKER)) {
+    return false;
+  }
+
+  // 只有“纯 PDF 打开链接”的 Markdown 才视为插件生成的占位页。
+  // 一旦用户在正文里补充笔记内容，即使保留了 _pdf_stub 标记，也不再自动覆盖。
+  return PDF_STUB_LINK_PATTERN.test(getMarkdownBody(source).trim());
+}
+
+function removeLegacyPdfStubMarker(source: string) {
+  return source.replace(/^\s*_pdf_stub:\s*true\s*\n/m, '');
 }
 
 function syncPdfStubs(postsDir: string) {
@@ -64,11 +94,13 @@ function syncPdfStubs(postsDir: string) {
 
     if (fs.existsSync(mdPath)) {
       const existing = fs.readFileSync(mdPath, 'utf-8');
-      // Only overwrite if this is still an auto-generated stub
-      if (!existing.includes(PDF_STUB_MARKER)) continue;
+      if (isGeneratedPdfStub(existing)) {
+        fs.writeFileSync(mdPath, removeLegacyPdfStubMarker(existing), 'utf-8');
+      }
+      continue;
     }
 
-    fs.writeFileSync(mdPath, generatePdfStub(pdfPath, postsDir), 'utf-8');
+    fs.writeFileSync(mdPath, generatePdfNotePage(pdfPath, postsDir), 'utf-8');
   }
 }
 
@@ -95,7 +127,7 @@ export function pdfPostsPlugin(): Plugin {
       });
     },
 
-    // Emit PDF files as Rollup assets so they are included in the build output
+    // 把 posts 里的 PDF 一起发到构建产物，保证 Markdown 里的 PDF 链接可访问。
     generateBundle() {
       const pdfFiles = walkPdfFiles(postsDir);
       for (const pdfPath of pdfFiles) {

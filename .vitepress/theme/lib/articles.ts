@@ -4,6 +4,7 @@ export const GALLERY_SECTION = 'gallery';
 export const POSTS_SECTION = 'posts';
 
 export interface ThemeArticleMeta {
+  _pdf_url?: string;
   author?: string;
   cover?: string | false;
   date?: string;

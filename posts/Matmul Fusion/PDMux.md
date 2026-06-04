@@ -1,7 +1,6 @@
 ---
 title: Towards High-Goodput LLM Serving with Prefill-decode Multiplexing.zh.dual
 date: 2026-06-04
-_pdf_stub: true
 _pdf_url: /posts/Matmul%20Fusion/PDMux.pdf
 ---
 # Towards High-Goodput LLM Serving with Prefill-decode Multiplexing

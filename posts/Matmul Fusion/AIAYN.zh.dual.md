@@ -1,7 +1,6 @@
 ---
 title: "AIAYN.zh.dual"
 date: 2026-05-29
-_pdf_stub: true
 _pdf_url: "/posts/Matmul%20Fusion/AIAYN.zh.dual.pdf"
 ---
 

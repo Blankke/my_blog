@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ExternalLink } from 'lucide-vue-next';
 import { useData, useRoute, withBase } from 'vitepress';
 import { computed } from 'vue';
 import {
@@ -14,7 +15,8 @@ interface FolderArticleItem {
   date: number;
   description: string;
   href: string;
-  isPdf: boolean;
+  pdfUrl: string;
+  route: string;
   title: string;
 }
 
@@ -79,13 +81,15 @@ const items = computed<FolderArticleItem[]>(() => {
   return articles.value
     .map((article) => {
       const normalizedRoute = normalizeArticleRoute(article.route);
-      const pdfUrl = (article.meta as Record<string, unknown>)._pdf_url as string | undefined;
+      const meta = article.meta as Record<string, unknown>;
+      const pdfUrl = typeof meta._pdf_url === 'string' ? meta._pdf_url : '';
       return {
         date: parseArticleDate(article.meta.date),
         description: article.meta.description || '',
         hidden: article.meta.hidden,
-        href: pdfUrl ?? normalizedRoute,
-        isPdf: Boolean(pdfUrl),
+        href: normalizedRoute,
+        pdfUrl,
+        route: normalizedRoute,
         title: article.meta.title || normalizedRoute.slice(prefix.length),
       };
     })
@@ -94,11 +98,11 @@ const items = computed<FolderArticleItem[]>(() => {
         return false;
       }
 
-      if (!article.href.startsWith(prefix) || article.href === currentRoute) {
+      if (!article.route.startsWith(prefix) || article.route === currentRoute) {
         return false;
       }
 
-      return !article.href.slice(prefix.length).includes('/');
+      return !article.route.slice(prefix.length).includes('/');
     })
     .sort((a, b) => b.date - a.date || a.title.localeCompare(b.title));
 });
@@ -111,28 +115,39 @@ const items = computed<FolderArticleItem[]>(() => {
       <span class="folder-post-list-count">{{ items.length }} 篇</span>
     </div>
     <div class="folder-post-list-items">
-      <a
+      <article
         v-for="item in items"
         :key="item.href"
         class="folder-post-list-item"
-        :class="{ 'folder-post-list-item--pdf': item.isPdf }"
-        :href="item.isPdf ? item.href : withBase(item.href)"
-        :target="item.isPdf ? '_blank' : undefined"
-        :rel="item.isPdf ? 'noopener' : undefined"
+        :class="{ 'folder-post-list-item--pdf': item.pdfUrl }"
       >
-        <div class="folder-post-list-item-head">
-          <h3 class="folder-post-list-item-title">
-            {{ item.title }}
-            <span v-if="item.isPdf" class="folder-post-list-item-pdf-badge">PDF</span>
-          </h3>
-          <time v-if="item.date" class="folder-post-list-item-date">
-            {{ formatDate(item.date) }}
-          </time>
-        </div>
-        <p v-if="item.description" class="folder-post-list-item-description">
-          {{ item.description }}
-        </p>
-      </a>
+        <a class="folder-post-list-item-main" :href="withBase(item.href)">
+          <div class="folder-post-list-item-head">
+            <h3 class="folder-post-list-item-title">
+              {{ item.title }}
+              <span v-if="item.pdfUrl" class="folder-post-list-item-pdf-badge">PDF</span>
+            </h3>
+            <time v-if="item.date" class="folder-post-list-item-date">
+              {{ formatDate(item.date) }}
+            </time>
+          </div>
+          <p v-if="item.description" class="folder-post-list-item-description">
+            {{ item.description }}
+          </p>
+        </a>
+        <a
+          v-if="item.pdfUrl"
+          class="folder-post-list-item-pdf-link"
+          :href="withBase(item.pdfUrl)"
+          target="_blank"
+          rel="noopener"
+          :aria-label="`打开 ${item.title} 的 PDF`"
+          title="打开 PDF"
+        >
+          <ExternalLink :size="15" aria-hidden="true" />
+          <span>PDF</span>
+        </a>
+      </article>
     </div>
   </section>
 </template>
@@ -168,7 +183,10 @@ const items = computed<FolderArticleItem[]>(() => {
 }
 
 .folder-post-list-item {
-  display: block;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0.8rem;
   padding: 1rem 1.1rem;
   border: 1px solid var(--home-card-border);
   border-radius: 14px;
@@ -183,6 +201,11 @@ const items = computed<FolderArticleItem[]>(() => {
   background: var(--home-card-bg-hover);
   box-shadow: var(--home-card-shadow-hover);
   transform: translateY(-1px);
+}
+
+.folder-post-list-item-main {
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .folder-post-list-item-head {
@@ -221,6 +244,29 @@ const items = computed<FolderArticleItem[]>(() => {
   white-space: nowrap;
 }
 
+.folder-post-list-item-pdf-link {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 1.8rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  color: var(--vp-c-text-2);
+  font-size: 0.78rem;
+  line-height: 1;
+  white-space: nowrap;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.folder-post-list-item-pdf-link:hover {
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+}
+
 .folder-post-list-item-description {
   margin: 0.55rem 0 0;
   color: var(--vp-c-text-2);
@@ -229,9 +275,17 @@ const items = computed<FolderArticleItem[]>(() => {
 }
 
 @media screen and (max-width: 640px) {
+  .folder-post-list-item {
+    flex-direction: column;
+  }
+
   .folder-post-list-item-head {
     flex-direction: column;
     gap: 0.25rem;
+  }
+
+  .folder-post-list-item-pdf-link {
+    align-self: flex-start;
   }
 }
 </style>

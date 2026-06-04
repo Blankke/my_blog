@@ -1,7 +1,6 @@
 ---
 title: "FlashAttention.zh.dual"
 date: 2026-05-29
-_pdf_stub: true
 _pdf_url: "/posts/Matmul%20Fusion/FlashAttention.zh.dual.pdf"
 ---
 
