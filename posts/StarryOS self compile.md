@@ -310,3 +310,24 @@ threads    StarryOS smp4      StarryOS smp8
 2          2454.31            2546.06           
 4          4602.60            5021.06           
 ```
+
+我有问题，测sysbench的时候我们跑出来的数据如下：CPU - sysbench cpu --cpu-max-prime=20000 --time=5 (events/sec, higher = better)  
+threads StarryOS smp4 StarryOS smp8  
+1 1246.40 1208.67  
+2 2454.31 2546.06  
+4 4602.60 5021.06  
+这个数据啊，smp8的thread4为什么可以超过4倍thread1的数据呢，这不是非常奇怪吗，相当于超线程了。给我个解释呢
+
+小的benchmark如sysbench可以跑出来性能的问题在哪，但是一旦跑复杂的程序，selfcompile这种大的工程，就会很难一下提升性能，找不到突破点。这样
+- 如何使用工具分析性能瓶颈
+    - linux是如何处理多核、并行场景的（perf ebpf等工具分析内核性能），我们在starry中也有ebpf，如何使用
+
+    - 去年有做qperf热力图分析函数的开销，这个我们能不能使用
+这些工具，需要落在实现层面上告诉我可以怎么用
+
+    - 最新pr针对3588的pmu硬件单元的perf支持。
+### 多核调度问题
+唤醒路径错误复用了 idle CPU reservation，与任务迁移及 `on_cpu/wake_handoff` 并发状态交错，导致 guest 重启。
+### 复现测试
+构造了等价 probe：8 个线程
+每轮把自身 affinity 设为 CPU `round % 4`，执行 CPU 检查和私有数据计算，短暂睡眠后通过条件变量同步，连续 96 轮。
