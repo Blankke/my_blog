@@ -21,3 +21,8 @@ html[data-home-view="gallery"] .VPNavScreenMenuLink[href="/?view=gallery"] {
   color: var(--vp-c-brand-1) !important;
   font-weight: 600;
 }
+
+/* Keep manual line breaks for poetry blockquotes on gallery pages only. */
+html[data-route-section="gallery"] .VPDoc .content main .vp-doc blockquote p {
+  white-space: pre-line;
+}

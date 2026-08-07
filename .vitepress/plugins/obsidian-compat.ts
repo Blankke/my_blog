@@ -541,8 +541,43 @@ function transformObsidianEmbeds(source: string, markdownFile: string) {
   return result.join('\n');
 }
 
-function transformObsidianMarkdown(source: string, markdownFile: string) {
-  const withNormalizedFences = transformCodeFenceLanguages(source);
+function transformGalleryBlockquoteHardBreaks(source: string) {
+  const lines = source.split(/\r?\n/);
+
+  return lines
+    .map((line) => {
+      const quoteMatch = line.match(/^(\s*>\s?)(.*)$/);
+      if (!quoteMatch) {
+        return line;
+      }
+
+      const [, , body] = quoteMatch;
+      const trimmedBody = body.trim();
+
+      // Keep callout syntax and empty quote lines untouched.
+      if (!trimmedBody || /^\[![^\]\n]+\]/i.test(trimmedBody)) {
+        return line;
+      }
+
+      // Markdown hard break: two trailing spaces.
+      if (/\s{2,}$/.test(line)) {
+        return line;
+      }
+
+      return `${line}  `;
+    })
+    .join('\n');
+}
+
+function transformObsidianMarkdown(
+  source: string,
+  markdownFile: string,
+  preserveBlockquoteLineBreaks = false,
+) {
+  const normalizedSource = preserveBlockquoteLineBreaks
+    ? transformGalleryBlockquoteHardBreaks(source)
+    : source;
+  const withNormalizedFences = transformCodeFenceLanguages(normalizedSource);
   const withCallouts = transformObsidianCallouts(withNormalizedFences);
   return transformObsidianEmbeds(withCallouts, markdownFile);
 }
@@ -557,7 +592,10 @@ export function obsidianCompatPlugin(): Plugin {
         return null;
       }
 
-      return transformObsidianMarkdown(code, filePath);
+      const normalizedPath = toPosixPath(filePath);
+      const isGalleryMarkdown = /\/gallery\/.+\.md$/.test(normalizedPath);
+
+      return transformObsidianMarkdown(code, filePath, isGalleryMarkdown);
     },
   };
 }

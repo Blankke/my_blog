@@ -1,5 +1,5 @@
 <script setup lang="ts" name="BlogApp">
-import { useData } from 'vitepress';
+import { useData, useRoute } from 'vitepress';
 import Theme from 'vitepress/theme';
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
 import { useAppearanceTransition } from '../lib/appearance-transition';
@@ -30,6 +30,7 @@ import HomeGalleryInfo from './HomeGalleryInfo.vue';
 import HomePostCategories from './HomePostCategories.vue';
 
 const { frontmatter } = useData();
+const route = useRoute();
 const layout = computed(() => frontmatter.value.layout);
 const isBlogTheme = useBlogThemeMode();
 const { Layout } = Theme;
@@ -94,6 +95,23 @@ watch(
     }
 
     delete document.documentElement.dataset.homeView;
+  },
+  { immediate: true },
+);
+
+watch(
+  () => route.path,
+  (nextPath) => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    if (nextPath === '/gallery/' || nextPath.startsWith('/gallery/')) {
+      document.documentElement.dataset.routeSection = 'gallery';
+      return;
+    }
+
+    delete document.documentElement.dataset.routeSection;
   },
   { immediate: true },
 );
