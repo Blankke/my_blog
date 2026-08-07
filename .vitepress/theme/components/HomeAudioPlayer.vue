@@ -768,7 +768,7 @@ watch(trackSignature, () => {
 .home-audio-label {
   color: var(--vp-c-text-1);
   font-family: var(--font-family-code);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -777,7 +777,7 @@ watch(trackSignature, () => {
 .home-audio-status,
 .home-audio-volume {
   font-family: var(--font-family-code);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
 }
 
@@ -880,7 +880,7 @@ watch(trackSignature, () => {
   flex-direction: column;
   gap: 8px;
   color: var(--vp-c-text-1);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .home-audio-range {
@@ -908,7 +908,7 @@ watch(trackSignature, () => {
   border-radius: 12px;
   background: var(--home-card-inner-bg);
   color: var(--vp-c-text-1);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .home-audio-settings-meta {
@@ -919,7 +919,7 @@ watch(trackSignature, () => {
   margin-top: 12px;
   color: var(--vp-c-text-2);
   font-family: var(--font-family-code);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }

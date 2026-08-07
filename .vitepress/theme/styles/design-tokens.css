@@ -22,14 +22,14 @@ html {
   --home-title-image-max-width-mobile: min(560px, 92vw);
   --home-title-image-max-height: 232px;
   --home-title-image-max-height-mobile: 166px;
-  --home-title-fallback-font-size: 36px;
-  --home-title-fallback-font-size-mobile: 32px;
+  --home-title-fallback-font-size: 40px;
+  --home-title-fallback-font-size-mobile: 35px;
   --home-title-motto-margin-top: 6px;
-  --home-title-motto-font-size: 15px;
-  --home-title-motto-font-size-mobile: 14px;
+  --home-title-motto-font-size: 17px;
+  --home-title-motto-font-size-mobile: 15px;
   --home-title-inspiring-margin-top: 16px;
   --home-title-inspiring-height: 32px;
-  --home-title-inspiring-font-size: 20px;
+  --home-title-inspiring-font-size: 22px;
 
   --category-panel-gap: 14px;
   --category-panel-gap-mobile: 10px;
@@ -41,9 +41,9 @@ html {
   --category-panel-item-min-height: 34px;
   --category-panel-item-padding: 6px 10px;
   --category-panel-item-radius: 8px;
-  --category-panel-title-font-size: 14px;
-  --category-panel-name-font-size: 14px;
-  --category-panel-count-font-size: 12px;
+  --category-panel-title-font-size: 15px;
+  --category-panel-name-font-size: 15px;
+  --category-panel-count-font-size: 13px;
   --category-panel-mark-width: 16px;
   --category-panel-mark-height: 12px;
   --category-panel-mark-border-width: 1.5px;
@@ -76,7 +76,7 @@ html {
   --home-card-inner-border: var(--home-surface-inner-border);
   --doc-surface-bg: rgba(255, 255, 255, 0.78);
 
-  --footer-link-font-size: 12px;
+  --footer-link-font-size: 13px;
 
   --font-family-base: "Comic Sans MS", "Microsoft YaHei", "微软雅黑",
     "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
@@ -104,12 +104,12 @@ html {
   --obsidian-figure-radius: 12px;
   --obsidian-figure-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   --obsidian-caption-margin-top: 0.6rem;
-  --obsidian-caption-font-size: 13px;
+  --obsidian-caption-font-size: 14px;
   --obsidian-missing-asset-margin: 1rem 0;
   --obsidian-missing-asset-padding: 0.85rem 1rem;
   --obsidian-missing-asset-radius: 12px;
-  --obsidian-missing-asset-font-size: 14px;
-  --obsidian-missing-asset-code-font-size: 13px;
+  --obsidian-missing-asset-font-size: 15px;
+  --obsidian-missing-asset-code-font-size: 14px;
   --obsidian-missing-inline-margin: 0 0.25rem;
   --obsidian-missing-inline-padding: 0.15rem 0.45rem;
   --obsidian-missing-inline-radius: 8px;

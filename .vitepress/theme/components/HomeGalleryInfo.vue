@@ -157,7 +157,7 @@ const latestItems = computed(() => {
   margin: 0 0 6px;
   color: var(--vp-c-brand-1);
   font-family: var(--font-family-code);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -165,14 +165,14 @@ const latestItems = computed(() => {
 .gallery-info-title {
   margin: 0;
   color: var(--vp-c-text-1);
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1.2;
 }
 
 .gallery-info-text {
   margin: 10px 0 0;
   color: var(--vp-c-text-2);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.8;
 }
 
@@ -198,17 +198,17 @@ const latestItems = computed(() => {
 .gallery-info-stat-value {
   color: var(--vp-c-text-1);
   font-family: var(--font-family-code);
-  font-size: 24px;
+  font-size: 26px;
   line-height: 1.2;
 }
 
 .gallery-info-stat-value--small {
-  font-size: 15px;
+  font-size: 17px;
 }
 
 .gallery-info-stat-label {
   color: var(--vp-c-text-2);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .gallery-info-section-head {
@@ -222,7 +222,7 @@ const latestItems = computed(() => {
   align-items: center;
   gap: 8px;
   color: var(--vp-c-text-1);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -257,7 +257,7 @@ const latestItems = computed(() => {
 .gallery-info-empty {
   margin: 12px 0 0;
   color: var(--vp-c-text-2);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 @media screen and (max-width: 767px) {

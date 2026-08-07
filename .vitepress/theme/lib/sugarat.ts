@@ -8,6 +8,7 @@ export { default as BlogList } from '../../../node_modules/@sugarat/theme/src/co
 export { default as BlogOml2d } from '../../../node_modules/@sugarat/theme/src/components/BlogOml2d.vue';
 export { default as BlogSidebar } from '../../../node_modules/@sugarat/theme/src/components/BlogSidebar.vue';
 export { default as Pagination } from '../../../node_modules/@sugarat/theme/src/components/Pagination.vue';
+export { default as Tag } from '../../../node_modules/@sugarat/theme/src/components/Tag.vue';
 export {
   useActiveTag,
   useArticles,

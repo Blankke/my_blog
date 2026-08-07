@@ -12,6 +12,11 @@ const theme = getThemeConfig({
   },
   themeColor: 'el-blue',
   author: 'Blankke',
+  blog: {
+    // 默认标签面板统计所有文章（含画廊）的标签，已由项目自带的
+    // HomePostTags / HomeGalleryTags 按视图拆分替代，这里关闭。
+    homeTags: false,
+  },
 });
 
 export default defineConfig({

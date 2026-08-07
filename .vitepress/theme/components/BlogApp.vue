@@ -27,7 +27,9 @@ import HomeAudioPlayer from './HomeAudioPlayer.vue';
 import HomeFeed from './HomeFeed.vue';
 import HomeGalleryCategories from './HomeGalleryCategories.vue';
 import HomeGalleryInfo from './HomeGalleryInfo.vue';
+import HomeGalleryTags from './HomeGalleryTags.vue';
 import HomePostCategories from './HomePostCategories.vue';
+import HomePostTags from './HomePostTags.vue';
 
 const { frontmatter } = useData();
 const route = useRoute();
@@ -166,8 +168,14 @@ watch(
             }"
             class="blog-info-wrapper"
           >
-            <BlogHomeInfo v-show="!isGalleryView" />
-            <HomeGalleryInfo v-show="isGalleryView" />
+            <template v-if="!isGalleryView">
+              <BlogHomeInfo />
+              <HomePostTags />
+            </template>
+            <template v-else>
+              <HomeGalleryInfo />
+              <HomeGalleryTags />
+            </template>
           </div>
         </div>
       </div>

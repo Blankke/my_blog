@@ -17,6 +17,7 @@
   "dependencies": {
     "@sugarat/theme": "^0.5.3",
     "lucide-vue-next": "^1.0.0",
+    "markdown-it": "^14.3.0",
     "vue": "3.5.13"
   },
   "devDependencies": {

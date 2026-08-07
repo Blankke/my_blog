@@ -272,7 +272,7 @@ router.onAfterRouteChange = () => {
 .home-feed-title {
   flex: 0 0 auto;
   color: var(--vp-c-text-1);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -292,7 +292,7 @@ router.onAfterRouteChange = () => {
   flex: 0 0 auto;
   color: var(--vp-c-brand-1);
   font-family: var(--font-family-code);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.08em;
 }
 
@@ -365,7 +365,7 @@ router.onAfterRouteChange = () => {
 .home-feed-card-title {
   margin: 0;
   color: var(--vp-c-text-1);
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.5;
 }
 
@@ -373,7 +373,7 @@ router.onAfterRouteChange = () => {
   flex: 0 0 auto;
   color: var(--vp-c-text-3);
   font-family: var(--font-family-code);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.04em;
   white-space: nowrap;
 }
@@ -388,7 +388,7 @@ router.onAfterRouteChange = () => {
   flex: 1 1 auto;
   margin: 0;
   color: var(--vp-c-text-2);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.8;
   display: -webkit-box;
   overflow: hidden;
@@ -427,7 +427,7 @@ router.onAfterRouteChange = () => {
   border-radius: 999px;
   background: var(--home-card-inner-bg);
   color: var(--vp-c-text-2);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1;
 }
 
