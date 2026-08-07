@@ -16,12 +16,12 @@ tags:
 控制流转为数据流，在Symbolic里面通过boolean控制数据是否为空，在结构上两边同时存在     
 switch根据bool的值选择值输出。
 merge操作从两边不为dead的中合并
-![[Pasted image 20260424103603.png]]
+![[./img/IV.Graph Optimization 图优化-01.png]]
 
 ## Templates
 ### fusion
  融合算子来优化图有他的优缺点
- ![[Pasted image 20260518160701.png|500]]
+ ![[./img/IV.Graph Optimization 图优化-02.png|500]]
  优点是：
 - 减少IO时间
 - 减少kernel launch时间
@@ -33,15 +33,15 @@ merge操作从两边不为dead的中合并
 >英伟达做了一个api，如果打开，会把程序的所有kernel收集到一起launch，然后一起执行。
 >这么做的目的是减少串行launch kernels的时候会出现的bubble，也就是launch的时间比gpu的计算时间更长时会出现gpu空闲的等待时间，然而放在一起的launch时间小于分别launch的和。
 >https://pytorch.org/blog/accelerating-pytorch-with-cuda-graphs/
->![[Pasted image 20260518161326.png|800]]
+>![[./img/IV.Graph Optimization 图优化-03.png|800]]
 
 
 ### Constant Folding常量折叠
 有点类似编译器的优化。常量可以在编译时预计算，是恒定的静态计算量。
-![[Pasted image 20260518161602.png|800]]
+![[./img/IV.Graph Optimization 图优化-04.png|800]]
 ### CommonSubexpression Elimination公共子表达式消除
 也是编译器中常用的优化方式，找到等价的表达式，消除重复表达的语句
-![[Pasted image 20260518161824.png]]
+![[./img/IV.Graph Optimization 图优化-05.png]]
 ### DeadCodeElimination 死代码消除
 永远不会执行到的代码
 
@@ -71,17 +71,17 @@ merge操作从两边不为dead的中合并
 >4. 生成可用的图替换规则；
 >5. 在优化阶段搜索并应用能够提升性能的替换。
 >
->![[Pasted image 20260518163408.png]]
+>![[./img/IV.Graph Optimization 图优化-06.png]]
 
 ### Graph Substitution Generator
 枚举固定长度下的所有可能的图，同时定义substitution为一对等价的图
 - 做法是随机初始化一堆张量然后放进去作为这些图的输入，然后找出相同的输出来认为是substitutions
-- ![[Pasted image 20260518164404.png|800]]
+- ![[./img/IV.Graph Optimization 图优化-07.png|800]]
 ### 重复图剪枝
 为了削减set的规模，可以通过重命名或等价子图的方法。
 ## partially equivalent transformations
 有些图并不是完全等价，但它们的大部分计算结果是一样的，只有一小部分位置不一样。如果我们能检测出“不一样的部分”，再额外做一点修正，那么也可以把它变成可用的优化替换。这就是 partially equivalent transformations，也就是“部分等价变换”。
-![[Pasted image 20260518165541.png|800]]
+![[./img/IV.Graph Optimization 图优化-08.png|800]]
 先从原始程序出发，生成很多“变体程序”，也就是 mutant programs。然后判断这些变体程序和原程序之间是不是完全等价，或者部分等价。如果是部分等价，就交给 mutant corrector 尝试修正。修正之后，得到 corrected mutants。最后优化器从这些候选程序里选择性能更好的程序。
 ### Mutant Generator
 - ***step 1***
@@ -119,4 +119,4 @@ merge操作从两边不为dead的中合并
 如果 mutant program 只有少量位置错了，那就没有必要完全放弃它。可以保留 mutant program 的大部分计算结果，只针对错误区域额外调用一个 correction kernel 进行补算。
 
 修正虽然会带来额外开销，但可以通过 kernel fusion 把这个开销压低。这样部分等价变换才有可能真的带来性能收益。不仅要额外计算错误区域，还要尽量把这个修正计算和其他算子融合起来，减少额外 kernel launch 和中间内存读写。
-![[Pasted image 20260518172423.png|800]]
+![[./img/IV.Graph Optimization 图优化-09.png|800]]

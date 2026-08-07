@@ -13,7 +13,7 @@ tags:
 [经典QoS调度算法——mClock算法](https://www.jianshu.com/p/35dc8e47f277)
 ## 一个候选方案：mclock解释
 我们大约参照了mclock的思想设计解决思路，但是**如果一个已经派发出去的 I/O 请求处理很久，它确实会长时间占用设备**。RWL / mClock 这类调度器主要控制的是“下一次派发谁”，不是 CPU 时间片那种“执行到一半抢占下来”。
-![[Pasted image 20260528181228.png|500]]
+![[./work-conserving IO scheduler-01.png|500]]
 此图是mclock的理论带宽配比，总结是下面一句话
 ***用户分配的带宽要么等于所设置的Reservation值，要么等于按照Weight分配的结果，要么等于Limit值。***
 - 当按照Weight分配的结果大于用户所设置的Reservation时，则用户最终分配的带宽为按照Weight分配的结果；
@@ -38,7 +38,7 @@ $$
 - 类似地，Weight标签、Limit标签也是同样的道理
 
 ### 调度原理
-![[Pasted image 20260528191248.png|500]]
+![[./work-conserving IO scheduler-02.png|500]]
 - 首先，mClock算法每次从Reservation阶段开始，也就是会先检查Reservation队列是否有请求，如果有则先从Reservation队列的请求先被处理，直到每个用户的**Reservation标签值大于当前时间**。
     - 这是因为用户的Reservation标签表示用户应当被调度的时间，当这个时间大于当前时间时，表示该请求还未到达调度时间。
 - 当Reservation阶段结束后，此时进入Weight阶段。Weight阶段同样是按照标签的大小依次调度，直到每个用户的**Limit标签值大于当前时间**，这里的判断条件和Reservation阶段的类似。另外，每次在Weight阶段调度一个请求之后，需要对所有Reservation标签进行调整：

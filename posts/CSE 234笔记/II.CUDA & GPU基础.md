@@ -10,10 +10,10 @@ tags:
 >[!quote] GPU的基本属性。
 >- 做问题一的时候总觉得少点什么，原来是缺了这一节课没有听，所以grid啥的知识点不明白。
 
-![[Pasted image 20260510200059.png|800]]
+![[./img/II.CUDA & GPU基础-01.png|800]]
 - SM/SMP（Streaming Multi-processor）
 
-![[Pasted image 20260510200217.png|800]]
+![[./img/II.CUDA & GPU基础-02.png|800]]
 - 线程(thread)就是最小的工作单元，对应一个cuda/tensor core。core就是alu嵌入到gpu中
 - 块（block）就是共享内存的线程块，每一个前文提到的SM就对应一个Block，然后会包含很多的线程，都并行工作
 - 网（grid）就是一堆block的集合，然后对应的就是GPU
@@ -85,7 +85,7 @@ __global__ void matrixAddDoubleB(
 - 所以这里的`i`,`j`其实就相当于去计算了这个thread在排布中的位置
 - 注意避免写入冲突，线程不能重复写入同一个区域。
 这里可以把前文有一张描述blockIdx等概念的图记在脑子里
-![[Pasted image 20260510204216.png|500]]
+![[./img/II.CUDA & GPU基础-03.png|500]]
 计算出的`(i,k)`就是图中这个坐标。原来这个数据就是`12*6`的然后我们block是`3*2`,thread是`4*3`，这个thread的分布也是`12*6`的，所以能够对上，每一个线程只算一个数据。
 
 我们把CPU code与GPU code严格分开，一个是串行，一个是SIMD并行，我们叫他们Host code和Device code。
@@ -101,7 +101,7 @@ matrixAdd<<<numBlocks, threadsPerBlock>>>(A，B，C);    //the only GPU code
 ### CUDA Control flow
 gpu每个线程本来是做相同的事情，以相同的速度，但是如果有越界，或者其他条件判断的问题，控制流这个问题就会扰乱这个速度。
 CUDA是static的，意思是他们不能在同一时间做不同的事情。
-![[Pasted image 20260510210145.png|800]]
+![[./img/II.CUDA & GPU基础-04.png|800]]
 类似图中这种情况，T和F的线程不能同时做不同的事情，所以只能等待，每一个branch做不同的事情。非常低效，如果有更多的branch会更加低效。画叉的区域也称为bubble，这也是控制冒险，类似cpu的控制冒险产生bubble
 - **maskking**
 ### 内存
@@ -140,11 +140,11 @@ cudaMemcpy(deviceA, A, bytes, cudaMemcpyHostToDevice);
 ## Kernel Execute
 - 每个线程块由一个 SM 执行，并且在线程块执行期间不会迁移到其他 SM。
 - 根据线程块的内存需求以及 SM 的内存资源，一个 SM 上可以同时驻留多个线程块。
-![[Pasted image 20260519175539.png|500]]
+![[./img/II.CUDA & GPU基础-05.png|500]]
 - 其中，warp 是 kernel 执行过程中的基本调度单位。
 - 一个线程块由若干个 32 线程的 warp 组成。
 - 每个时钟周期，warp 调度器会选择一个已经准备好的 warp，并将该 warp 分派到 CUDA 核心上执行。
-![[Pasted image 20260519175614.png|500]]
+![[./img/II.CUDA & GPU基础-06.png|500]]
 可以通过多warp调度来cover掉准备数据的时间，减少SM上的bubble
 >[!note]-  Warp 的形成规则
 >当一个 Thread Block 被分配到 SM 上时，硬件会自动将其中的线程按 `threadIdx` 顺序分组为 Warp：
@@ -173,7 +173,7 @@ cudaMemcpy(deviceA, A, bytes, cudaMemcpyHostToDevice);
 - 已知：GPU 有 2 个 SM（流式多处理器），规格如下
 - CUDA 的线程调度会是什么样子？
 
-![[Pasted image 20260510213016.png|800]]
+![[./img/II.CUDA & GPU基础-07.png|800]]
 动态调度算法会按序在不同的SM的共享内存允许的情况下，把不同的块map在几个SM上，直到内存满了（over-subscription）。同一个SM上的block是并发执行的，他们代码不能有互相依赖的，block 之间应该是机器无关的：系统可以按任意顺序调度。
 也就是说，block 到 SM 的映射不是按 block ID 固定映射，也不是所有 block 一次性同时运行，而是***由 GPU 的 block scheduler 根据 SM 上剩余资源动态调度***。资源够，就继续塞新的 block；资源不够，就等已有 block 执行完释放资源后再调度新的 block。
 >[!explain] 并行和并发

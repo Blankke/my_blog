@@ -12,7 +12,7 @@ _pdf_url: /posts/Matmul%20Fusion/PDMux.pdf
 - **预填充prefill**：是input，是计算密集型的，计算需求随着输入长度线性增长。produce first token
 - **解码decode**：是output，是内存密集型的。iteratively generates the remaining tokens.
 
-![[Pasted image 20260604160653.png]]
+![[./img/PDMux-01.png]]
 一个典型 LLM serving 系统里，请求不是孤立执行的，而是会混合执行 prefill、decode、KV cache 复用和 batching。
 - `P` 表示 **Prefill 阶段**：模型一次性处理输入 prompt / 上下文，生成第一个 token，同时建立 KV cache。
 - `D` 表示 **Decode 阶段的一次迭代**：每次 decode 通常只生成一个新 token，然后把这个 token 的 KV 也追加进 KV cache。
@@ -38,7 +38,7 @@ User2 的 prefill 结束后，系统就可以把 User1 和 User2 的 decode 合�
 - (b) LoongServe：动态解耦服务
 - (c) Chunked-prefill：分块预填充
 ### 现有方案
-![[Pasted image 20260604162345.png]]
+![[./img/PDMux-02.png]]
 图里有 4 张 GPU，横轴是时间。蓝色是 prefill，浅绿色是 decode iteration，白色小块是 KV cache，斜线阴影是 GPU 空闲资源。图注说明：b1 在 0T 到达，b2 在 1T 到达，b3 在 3T 到达，b1' 在 5T 到达；b1' 是 b1 的后续请求，会复用 b1 的 KV cache。黑色实线箭头表示 KV cache migration，红色虚线叉号表示 recomputation。
 #### Splitwise：静态解耦服务
 把 GPU 静态分成两组：一组专门做 prefill；一组专门做 decode
@@ -79,7 +79,7 @@ prefill chunk 和 decode iteration 被绑在一起；token budget 小则 GPU 利
 
 ## Design
 ### 概述
-![[Pasted image 20260604164240.png]]
+![[./img/PDMux-03.png]]
 
 - **intra-GPU prefill-decode multiplexing**，也就是是 **在同一张 GPU 内部** 做 prefill/decode 的资源划分。总思想是：
     - ***不要把 prefill 和 decode 分到不同 GPU / 不同实例，也不要把 prefill 切 token chunk 和 decode 强行融合；而是在同一张 GPU 内，把一部分 SM 分给 decode，另一部分 SM 分给 prefill，让两者同时跑，并共享同一份显存和 KV cache pool。***
@@ -87,7 +87,7 @@ prefill chunk 和 decode iteration 被绑在一起；token budget 小则 GPU 利
 
 ### 挑战
 #### 虽然把 prefill 和 decode 分到不同 SM 上了，但它们仍然要协调。协调不好，GPU 会空转。
-![[Pasted image 20260604171208.png]]
+![[./img/PDMux-04.png]]
 prefill 通常启动慢、执行长，decode iteration 通常短而频繁。两者延迟差异很大，如果直接硬套“两个流并行执行”，很容易一边等另一边，产生 bubble。
 
 #### 只能切 SM，但不能完全切显存带宽、L2、HBM 等共享资源。

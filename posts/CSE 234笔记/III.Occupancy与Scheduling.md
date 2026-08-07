@@ -23,7 +23,7 @@ grid = lambda meta: (triton.cdiv(m, meta["BLOCK_SIZE_M"]) * triton.cdiv(n, meta[
 6. triton上的一个 pid 就对应一个 Triton block/program，一个program负责计算的是一个`BLOCK_M*BLOCK_N`的大小，也就是上文提到的一个BLOCK的计算范围。
 ## Block调度
 
-![[Pasted image 20260510213016.png|800]]
+![[./img/III.Occupancy与Scheduling-01.png|800]]
 
 一个SM可以容纳多个Block在其中驻留，然后SM内部根据warp为单位进行调度执行。一个SM中有多个warp可以轮换切着占用core。
 

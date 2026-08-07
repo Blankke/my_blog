@@ -68,7 +68,7 @@ categories:
 	- [ ] tty是什么指令
 	- [ ] stty都是啥指令
 - 系统登陆的时候会创建一个会话Session。
-![[Pasted image 20250326115004.png]]
+![[./img/终端、TTY 与 Unix Shell-01.png]]
 - fork创建的进程会在同一个进程组中(Process Group)
 	- shell创建的进程会分配一个新的进程组,最开始创建的那个进程是Leader
 	- 每一个新的运行的进程(Leader)再创建都会在同一个进程组中。当前运行的是前台进程组

@@ -109,7 +109,7 @@ Application
 ---
 
 ## Design
-![[Pasted image 20260709212711.png||500]]
+![[./img/Adaptive Kernel Fusion-01.png||500]]
 
 Aker 由四个模块组成：
 - **Static kernel fuser**

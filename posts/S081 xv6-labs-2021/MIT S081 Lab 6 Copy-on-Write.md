@@ -89,7 +89,7 @@ uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
 ```
 `r_stval()`返回异常的虚拟地址。
 `r_scause()==13||r_scause()==15`意味着缺页异常
-![[Pasted image 20250207201458.png]]
+![[./img/MIT S081 Lab 6 Copy-on-Write-01.png]]
 
 **在defs里面声明判断函数和分配函数**
 分配函数请参照uvmcopy

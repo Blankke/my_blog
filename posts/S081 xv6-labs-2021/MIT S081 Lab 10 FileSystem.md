@@ -9,7 +9,7 @@ categories:
 ##### 还有关于fs crash的问题没有了解过，可以进入s081的课程中去听一下什么是file system crash。
 >[Lec15 Crash recovery (Frans) | MIT6.S081](https://mit-public-courses-cn-translatio.gitbook.io/mit6-s081/lec15-crash-recovery-frans)
 ## 前置知识
-![[Pasted image 20250215093712.png]]
+![[./img/MIT S081 Lab 10 FileSystem-01.png]]
 ### **FAT**
 文件以链表方式存储。，固定大小连续存储。文件信息分别存放在链表和目录项中。
  
@@ -38,7 +38,7 @@ struct dinode {
 };
 ```
 `NINDIRECT`为块大小除以uint
-![[Pasted image 20250216154746.png]]
+![[./img/MIT S081 Lab 10 FileSystem-02.png]]
 原本的文件系统如下，12个直接索引，1个间接索引（通过索引，一个块可存储256个地址）。
 _我们需要将address12修改为二级间接，指向256个一级间接（indirect）_
 ##### 映射关系
@@ -155,7 +155,7 @@ static struct inode*
 create(char *path, short type, short major, short minor);
 ```
 
-![[Pasted image 20250216171446.png]]
+![[./img/MIT S081 Lab 10 FileSystem-03.png]]
 ### 步骤
 #### 1、添加接口
 跟着提示走

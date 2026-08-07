@@ -19,7 +19,7 @@ categories:
 - 右侧使用我们找到的SGMV方法。
 >[!note]- 批处理效应
 
-![[Pasted image 20260506214239.png|500]]
+![[./img/Punica：Multi-Tenant LoRA Serving-01.png|500]]
 Punica 的 SGMV 公式：
 $$Y[s[i]:s[i+1]]+=X[s[i]:s[i+1]]@W[i]$$
 LoRA 权重指的是 LoRA adapter 里面的可训练矩阵 `A` 和 `B`

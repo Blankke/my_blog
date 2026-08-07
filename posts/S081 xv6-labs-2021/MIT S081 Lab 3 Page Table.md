@@ -9,9 +9,9 @@ categories:
 ## 相关知识
 
 ### xv6内存
-XV6基于Sv39 RISC-V运行，这意味着它只使用64位虚拟地址的低39位；而高25位不使用。在这种Sv39配置中，RISC-V页表在逻辑上是一个由 $2^{27}$ 个页表条目（Page Table Entries/PTE）组成的数组，每个PTE包含一个44位的物理页码（Physical Page Number/PPN）和一些标志。分页硬件通过使用虚拟地址39位中的前27位索引页表，以找到该虚拟地址对应的一个PTE，然后生成一个56位的物理地址，其前44位来自PTE中的PPN，其后12位来自原始虚拟地址。图3.1显示了这个过程，页表的逻辑视图是一个简单的PTE数组（参见图3.2进行更详细的了解）。页表使操作系统能够以 4096 ( $2^{12}$ ) 字节的对齐块的粒度控制虚拟地址到物理地址的转换，这样的块称为页（page）。![[Pasted image 20250119122853.png]]
+XV6基于Sv39 RISC-V运行，这意味着它只使用64位虚拟地址的低39位；而高25位不使用。在这种Sv39配置中，RISC-V页表在逻辑上是一个由 $2^{27}$ 个页表条目（Page Table Entries/PTE）组成的数组，每个PTE包含一个44位的物理页码（Physical Page Number/PPN）和一些标志。分页硬件通过使用虚拟地址39位中的前27位索引页表，以找到该虚拟地址对应的一个PTE，然后生成一个56位的物理地址，其前44位来自PTE中的PPN，其后12位来自原始虚拟地址。图3.1显示了这个过程，页表的逻辑视图是一个简单的PTE数组（参见图3.2进行更详细的了解）。页表使操作系统能够以 4096 ( $2^{12}$ ) 字节的对齐块的粒度控制虚拟地址到物理地址的转换，这样的块称为页（page）。![[./img/MIT S081 Lab 3 Page Table-01.png]]
 如图3.2所示，实际的转换分三个步骤进行。页表以三级的树型结构存储在物理内存中。该树的根是一个4096字节的页表页，其中包含512个PTE，每个PTE中包含该树下一级页表页的物理地址。这些页中的每一个PTE都包含该树最后一级的512个PTE（也就是说每个PTE占8个字节，正如图3.2最下面所描绘的）。分页硬件使用27位中的前9位在根页表页面中选择PTE，中间9位在树的下一级页表页面中选择PTE，最后9位选择最终的PTE。==多级页表==
-![[Pasted image 20250119123113.png]]
+![[./img/MIT S081 Lab 3 Page Table-02.png]]
 xv6的内存映射如下
 [3.2 内核地址空间 · 6.S081 All-In-One](http://xv6.dgs.zone/tranlate_books/book-riscv-rev1/c3/s2.html)
 ### 函数
@@ -254,7 +254,7 @@ int             vmprint(pagetable_t);
 - walk() in kernel/vm.c is very useful for finding the right PTEs.
 `pte_t *walk(pagetable_t pagetable, uint64 va, int alloc)`==将va处的pte返回==
 
-- You'll need to define PTE_A, the access bit, in kernel/riscv.h. Consult the RISC-V manual to determine its value.![[Pasted image 20250120145938.png]]
+- You'll need to define PTE_A, the access bit, in kernel/riscv.h. Consult the RISC-V manual to determine its value.![[./img/MIT S081 Lab 3 Page Table-03.png]]
 PTE-A是第六位，也就是说`#define PTE_A (1L << 6)`
 
 - Be sure to clear PTE_A after checking if it is set. Otherwise, it won't be possible to determine if the page was accessed since the last time pgaccess() was called (i.e., the bit will be set forever).

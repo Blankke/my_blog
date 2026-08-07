@@ -54,7 +54,7 @@ w_sstatus(uint64 x)
 ```
 请注意，CPU不会切换到内核页表，不会切换到内核栈，也不会保存除`pc`之外的任何寄存器。内核软件必须执行这些任务。CPU在陷阱期间执行尽可能少量工作的一个原因是为软件提供灵活性；例如，一些操作系统在某些情况下不需要页表切换，这可以提高性能。
 ### 陷阱帧
-![[Pasted image 20250117100234.png]]
+![[./img/MIT S081 Lab 4 Traps-02.png]]
 ### 指令
 **ecall**
 涉及到的寄存器有stvec、sepc、scause、sstatus
@@ -97,7 +97,7 @@ w_sstatus(uint64 x)
  uint64 botton=PGROUNDDOWN(fp);
 ```
 注意，此时获得的fp是帧指针在栈上的地址，我们要想访问栈上的数据需要用指针进行访问。
-_根据提示，栈上的存储如下图![[Pasted image 20250123105407.png]]
+_根据提示，栈上的存储如下图![[./img/MIT S081 Lab 4 Traps-01.png]]
 `fp-8`是return address，`fp-16`是下一个fp。
 ```
      uint64 ret_addr=*(uint64*)(fp-8);
