@@ -12,19 +12,33 @@
 
 .VPContent:not(.is-home) {
   min-height: 100vh;
-  background-color: var(--home-bg-color) !important;
-  background-image: linear-gradient(
-      var(--doc-surface-bg),
-      var(--doc-surface-bg)
-    ), radial-gradient(circle at top, var(--home-bg-glow) 0, transparent 44%),
+  background-color: var(--doc-scene-bg) !important;
+  background-image: radial-gradient(
+      circle at 72% 6%,
+      var(--doc-scene-glow) 0,
+      transparent 38rem
+    ), linear-gradient(var(--doc-scene-wash), var(--doc-scene-wash)),
     var(--home-pattern-image) !important;
   background-repeat: no-repeat, no-repeat, repeat;
   background-position: center top, center top, left top;
-  background-attachment: scroll, scroll, fixed;
+  background-attachment: fixed, fixed, fixed;
 }
 
 .VPNavBar:not(.home) {
-  background-color: var(--vp-nav-bg-color) !important;
+  border-bottom: 1px solid var(--doc-chrome-border);
+  background-color: var(--doc-chrome-bg) !important;
+  box-shadow: var(--doc-chrome-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(var(--glass-blur))
+    saturate(var(--glass-saturation));
+}
+
+.VPNavBar:not(.home) :is(.title, .content-body) {
+  background-color: transparent !important;
+}
+
+.VPNavBar:not(.home) .divider-line {
+  background-color: transparent !important;
 }
 
 .VPHome::before {
@@ -104,7 +118,12 @@
 .VPHome .blog-info .card {
   border: 1px solid var(--home-surface-border);
   background: var(--home-surface-bg);
-  box-shadow: var(--home-surface-shadow);
+  box-shadow: var(--glass-highlight), var(--home-surface-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(var(--glass-blur))
+    saturate(var(--glass-saturation));
+  transition: border-color 0.22s ease, background-color 0.22s ease, box-shadow
+    0.22s ease, transform 0.22s ease;
 }
 
 .VPHome .home-post-categories:hover,
@@ -112,7 +131,8 @@
 .VPHome .blog-info .card:hover {
   border-color: var(--home-surface-border-hover);
   background: var(--home-surface-bg-hover);
-  box-shadow: var(--home-surface-shadow-hover);
+  box-shadow: var(--glass-highlight), var(--home-surface-shadow-hover);
+  transform: translateY(-1px);
 }
 
 .VPHome .home-post-category {

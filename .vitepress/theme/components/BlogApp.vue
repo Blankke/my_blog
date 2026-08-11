@@ -20,6 +20,7 @@ import {
 import BlogHomeTitle from './BlogHomeTitle.vue';
 import BlogPageViews from './BlogPageViews.vue';
 import CalloutEnhancer from './CalloutEnhancer.vue';
+import CardSpotlight from './CardSpotlight.vue';
 import DocSidebarResizer from './DocSidebarResizer.vue';
 import FolderPostList from './FolderPostList.vue';
 import GalleryFeed from './GalleryFeed.vue';
@@ -30,6 +31,8 @@ import HomeGalleryInfo from './HomeGalleryInfo.vue';
 import HomeGalleryTags from './HomeGalleryTags.vue';
 import HomePostCategories from './HomePostCategories.vue';
 import HomePostTags from './HomePostTags.vue';
+import NavbarLimelight from './NavbarLimelight.vue';
+import TiltCards from './TiltCards.vue';
 
 const { frontmatter } = useData();
 const route = useRoute();
@@ -45,6 +48,28 @@ const { canAnimateAppearance } = useAppearanceTransition(openTransition);
 const enableTransitionStyles = computed(
   () => openTransition && canAnimateAppearance.value,
 );
+
+const activeNavTarget = computed<
+  'home' | 'articles' | 'gallery' | 'about' | null
+>(() => {
+  if (isHomeRoute.value) {
+    return isGalleryView.value ? 'gallery' : 'home';
+  }
+
+  if (route.path === '/gallery/' || route.path.startsWith('/gallery/')) {
+    return 'gallery';
+  }
+
+  if (route.path === '/posts/' || route.path.startsWith('/posts/')) {
+    return 'articles';
+  }
+
+  if (route.path === '/about' || route.path === '/about.html') {
+    return 'about';
+  }
+
+  return null;
+});
 
 function handleHomeViewNavClick(event: MouseEvent) {
   if (!isHomeRoute.value) {
@@ -126,6 +151,8 @@ watch(
       <ClientOnly>
         <DocSidebarResizer />
         <CalloutEnhancer />
+        <CardSpotlight />
+        <TiltCards />
         <BlogOml2d />
         <BlogAlert />
       </ClientOnly>
@@ -141,6 +168,9 @@ watch(
 
     <template #nav-bar-content-before>
       <slot name="nav-bar-content-before" />
+      <ClientOnly>
+        <NavbarLimelight :active-target="activeNavTarget" />
+      </ClientOnly>
     </template>
 
     <template v-if="isBlogTheme" #home-hero-before>
@@ -305,13 +335,23 @@ watch(
 }
 
 .blog-list-wrapper {
+  flex: 1 1 auto;
+  min-width: 0;
   width: 100%;
 }
 
 .blog-info-wrapper {
+  flex: 0 0 var(--layout-home-sidebar-width);
   margin-left: var(--layout-home-sidebar-gap);
   position: sticky;
   top: var(--layout-home-sidebar-top);
+  width: var(--layout-home-sidebar-width);
+}
+
+.blog-info-wrapper :deep(.blog-info),
+.blog-info-wrapper :deep(.gallery-info),
+.blog-info-wrapper :deep(.home-tags-card) {
+  width: 100%;
 }
 
 @media screen and (max-width: 959px) {
@@ -332,6 +372,7 @@ watch(
   }
 
   .blog-info-wrapper {
+    flex: 1 1 100%;
     margin: var(--layout-home-sidebar-mobile-margin);
     width: 100%;
   }

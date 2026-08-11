@@ -1,0 +1,107 @@
+html {
+  --nav-limelight-source: #111;
+  --nav-limelight-core: #000;
+  --nav-limelight-beam: rgba(0, 0, 0, 0.1);
+  --nav-limelight-glow: rgba(0, 0, 0, 0.24);
+  --nav-limelight-text: #111;
+}
+
+html.dark {
+  --nav-limelight-source: #f5f5f5;
+  --nav-limelight-core: #fff;
+  --nav-limelight-beam: rgba(255, 255, 255, 0.12);
+  --nav-limelight-glow: rgba(255, 255, 255, 0.28);
+  --nav-limelight-text: #fff;
+}
+
+.navbar-limelight-mount {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .VPNavBarMenu {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .VPNavBarMenu > :is(.VPNavBarMenuLink, .VPNavBarMenuGroup) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .navbar-limelight {
+    --nav-limelight-x: 0px;
+    position: absolute;
+    top: 6px;
+    left: 0;
+    z-index: 0;
+    width: 42px;
+    height: 5px;
+    border-radius: 999px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate3d(calc(var(--nav-limelight-x) - 21px), 0, 0);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--nav-limelight-source) 16%,
+      var(--nav-limelight-core) 50%,
+      var(--nav-limelight-source) 84%,
+      transparent
+    );
+    box-shadow: 0 1px 6px var(--nav-limelight-glow), 0 11px 20px
+      var(--nav-limelight-glow), 0 27px 34px
+      color-mix(in srgb, var(--nav-limelight-glow) 54%, transparent);
+    will-change: transform;
+  }
+
+  .navbar-limelight[data-visible] {
+    opacity: 1;
+  }
+
+  .navbar-limelight[data-ready] {
+    transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms
+      ease, background-color 250ms ease, box-shadow 250ms ease;
+  }
+
+  .navbar-limelight::after {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    width: 82px;
+    height: calc(var(--vp-nav-height) - 16px);
+    content: "";
+    pointer-events: none;
+    transform: translateX(-50%);
+    clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+    background: linear-gradient(
+      to bottom,
+      var(--nav-limelight-beam),
+      color-mix(in srgb, var(--nav-limelight-beam) 26%, transparent) 62%,
+      transparent
+    );
+  }
+
+  .VPNavBarMenu > .VPNavBarMenuLink.active,
+  .VPNavBarMenu > .VPNavBarMenuGroup.active .text,
+  html:not([data-home-view="gallery"]) .VPNavBarMenuLink[href="/"].active,
+  html[data-home-view="gallery"]
+    .VPNavBarMenu
+    > .VPNavBarMenuLink[href="/?view=gallery"] {
+    color: var(--nav-limelight-text) !important;
+    font-weight: 600 !important;
+  }
+
+  html[data-home-view="gallery"]
+    .VPNavBarMenu
+    > .VPNavBarMenuLink[href="/"].active {
+    color: var(--vp-c-text-2) !important;
+    font-weight: 500 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar-limelight[data-ready] {
+    transition: opacity 120ms ease;
+  }
+}

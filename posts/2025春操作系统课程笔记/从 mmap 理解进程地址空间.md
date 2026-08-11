@@ -11,10 +11,11 @@ categories:
 - 大语言模型是不固定的，它会出现幻觉
 ## 进程的地址空间
 #### 进程的初始状态（execve 后复位的状态）
-	- 寄存器：可直接打印
-	- 内存：字节数组。==内存的绝大部分空间都不可访问==
-		- 写一段c代码，把main赋值给一个指针，然后解引用，然后输出。会打印出main在地址空间的地址，但是不能对该指针赋值。
-		- 内存只能ld、sd
+
+- 寄存器：可直接打印
+- 内存：字节数组。<mark>内存的绝大部分空间都不可访问</mark>
+  - 写一段c代码，把main赋值给一个指针，然后解引用，然后输出。会打印出main在地址空间的地址，但是不能对该指针赋值。
+  - 内存只能ld、sd
 ---
 # Registers
 
@@ -162,29 +163,33 @@ with open('/dev/sda', 'rb') as fp: mm = mmap.mmap(fp.fileno(), prot=mmap.PROT_RE
 - 修改程序状态，修改地址空间
 #### 金手指：直接物理劫持内存
 
-	- 听起来很离谱，但 “卡带机” 时代的确可以做到！卡带上ROM（静态素材，代码素材）和RAM一起映射到内存地址空间
-	- 为什么叫“外挂”？因为真的是外挂。
-	![center](https://jyywiki.cn/OS/img/game-genie.webp)
-	- 今天我们有 Debug Registers 和 [Intel Processor Trace](https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace)
-	- 帮助系统工具 “合法入侵” 地址空间
-		- 计算机给rom一个地址，rom返回一个值
-			- 添加功能模拟行为，传输地址信号和数据信号
-			- 增加查找表LUT，运行从这里执行配置。在ROM传递信号时，读到一处替换成另一个值
-			- https://www.howtogeek.com/706248/what-was-the-game-genie-cheat-device-and-how-did-it-work/
-	- 现在的游戏游戏动态分配内存，地址不一样，解决方案：
-		##### 查找 + Filter
-			- 进入游戏时 exp=4950exp=4950
-			- 打了个怪 exp=5100exp=5100
-			- 符合 4950→5100 4950→5100 变化的内存地址是**很少**的
-		    - 好了，出门就是满级了
-	    - ***金山游侠*** Hack DirectX游戏内呼叫
-	    - 类似游戏的调试器
-	    - `      string memfile = "/proc/" + to_string(pid) + "/mem";`查看进程的内存，把内存当文件打开
-	- DMA外挂
-		- 内存ddr上加一个一样的卡拷贝内存
-		- 用设备和操作系统共享内存，可以读取内存
-	- 采集视频信号
-		- 采集卡 ([MS2130](https://jyywiki.cn/OS/manuals/MS2130.pdf)) + 树莓派 = 外挂
-		- 输出视频信号，使用模式识别检测视频信号并标记。
-		- FPGA，使用IP核合成视频
-		- 可以作为copilot
+- 听起来很离谱，但“卡带机”时代的确可以做到！卡带上 ROM（静态素材，代码素材）和 RAM 一起映射到内存地址空间
+- 为什么叫“外挂”？因为真的是外挂。
+
+![center](https://jyywiki.cn/OS/img/game-genie.webp)
+
+- 今天我们有 Debug Registers 和 [Intel Processor Trace](https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace)
+- 帮助系统工具“合法入侵”地址空间
+  - 计算机给 ROM 一个地址，ROM 返回一个值
+    - 添加功能模拟行为，传输地址信号和数据信号
+    - 增加查找表 LUT，运行从这里执行配置。在 ROM 传递信号时，读到一处替换成另一个值
+    - <https://www.howtogeek.com/706248/what-was-the-game-genie-cheat-device-and-how-did-it-work/>
+- 现在的游戏动态分配内存，地址不一样，解决方案：
+
+  ##### 查找 + Filter
+
+  - 进入游戏时 exp=4950exp=4950
+  - 打了个怪 exp=5100exp=5100
+  - 符合 4950→5100 4950→5100 变化的内存地址是**很少**的
+    - 好了，出门就是满级了
+  - ***金山游侠*** Hack DirectX 游戏内呼叫
+  - 类似游戏的调试器
+  - `string memfile = "/proc/" + to_string(pid) + "/mem";` 查看进程的内存，把内存当文件打开
+- DMA 外挂
+  - 内存 DDR 上加一个一样的卡拷贝内存
+  - 用设备和操作系统共享内存，可以读取内存
+- 采集视频信号
+  - 采集卡（[MS2130](https://jyywiki.cn/OS/manuals/MS2130.pdf)）+ 树莓派 = 外挂
+  - 输出视频信号，使用模式识别检测视频信号并标记。
+  - FPGA，使用 IP 核合成视频
+  - 可以作为 copilot

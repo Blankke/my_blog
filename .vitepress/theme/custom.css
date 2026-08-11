@@ -1,8 +1,12 @@
 @import "./styles/design-tokens.css";
 @import "./styles/blog-layout.css";
+@import "./styles/glass-surfaces.css";
 @import "./styles/obsidian.css";
 @import "./styles/content-typography.css";
 @import "./styles/code-blocks.css";
+@import "./styles/navbar-limelight.css";
+@import "./styles/card-spotlight.css";
+@import "./styles/tilt-cards.css";
 
 html:not([data-home-view="gallery"])
   .VPNavBarMenuLink.active[href="/?view=gallery"],

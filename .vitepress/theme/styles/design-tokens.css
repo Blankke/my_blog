@@ -6,12 +6,13 @@ html {
   --doc-sidebar-resizer-bar-width: 2px;
   --doc-sidebar-resizer-bar-radius: 999px;
 
-  --layout-home-max-width: 1126px;
+  --layout-home-max-width: min(1520px, calc(100vw - 48px));
   --layout-home-padding: 20px;
   --layout-home-nav-offset: 16px;
   --layout-home-banner-padding: 16px 0 12px;
   --layout-home-banner-padding-mobile: 12px 0 10px;
-  --layout-home-sidebar-gap: 16px;
+  --layout-home-sidebar-gap: clamp(16px, 1.25vw, 22px);
+  --layout-home-sidebar-width: clamp(280px, 19vw, 360px);
   --layout-home-sidebar-top: 100px;
   --layout-home-sidebar-top-mobile: 40px;
   --layout-home-sidebar-mobile-margin: 20px 0;
@@ -65,6 +66,14 @@ html {
   --home-surface-inner-bg: rgba(255, 255, 255, 0.2);
   --home-surface-inner-bg-hover: rgba(255, 255, 255, 0.34);
   --home-surface-inner-border: rgba(80, 106, 72, 0.12);
+  --glass-radius-lg: 24px;
+  --glass-radius-md: 16px;
+  --glass-radius-sm: 11px;
+  --glass-blur: 18px;
+  --glass-blur-main: 22px;
+  --glass-blur-aux: 12px;
+  --glass-saturation: 116%;
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.42);
   --home-card-bg: var(--home-surface-bg);
   --home-card-bg-hover: var(--home-surface-bg-hover);
   --home-card-border: var(--home-surface-border);
@@ -74,7 +83,29 @@ html {
   --home-card-inner-bg: var(--home-surface-inner-bg);
   --home-card-inner-bg-hover: var(--home-surface-inner-bg-hover);
   --home-card-inner-border: var(--home-surface-inner-border);
-  --doc-surface-bg: rgba(255, 255, 255, 0.78);
+  --doc-scene-bg: #e5eed8;
+  --doc-scene-wash: rgba(235, 244, 220, 0.54);
+  --doc-scene-glow: rgba(255, 252, 229, 0.62);
+  --doc-main-bg-top: rgba(225, 240, 205, 0.29);
+  --doc-main-bg-bottom: rgba(213, 232, 191, 0.2);
+  --doc-main-sheen: rgba(255, 255, 255, 0.11);
+  --doc-main-border: rgba(91, 119, 82, 0.2);
+  --doc-main-shadow: 0 30px 72px rgba(47, 68, 39, 0.22), 0 7px 22px
+    rgba(47, 68, 39, 0.11);
+  --doc-aux-bg: rgba(232, 244, 216, 0.21);
+  --doc-aux-bg-hover: rgba(239, 248, 226, 0.3);
+  --doc-aux-border: rgba(88, 112, 80, 0.14);
+  --doc-aux-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  --doc-aux-shadow: 0 12px 34px rgba(48, 70, 39, 0.09);
+  --doc-inset-bg: rgba(255, 255, 255, 0.23);
+  --doc-inset-border: rgba(85, 111, 79, 0.14);
+  --doc-active-bg: rgba(88, 132, 105, 0.11);
+  --doc-active-text: #39756b;
+  --doc-chrome-bg: rgba(247, 250, 240, 0.76);
+  --doc-chrome-border: rgba(78, 103, 72, 0.14);
+  --doc-chrome-shadow: 0 8px 28px rgba(46, 66, 39, 0.1);
+  --doc-control-bg: rgba(255, 255, 255, 0.38);
+  --doc-control-border: rgba(77, 104, 72, 0.14);
 
   --footer-link-font-size: 13px;
 
@@ -135,7 +166,31 @@ html.dark {
   --home-surface-inner-bg: rgba(20, 20, 20, 0.46);
   --home-surface-inner-bg-hover: rgba(26, 26, 26, 0.72);
   --home-surface-inner-border: rgba(255, 255, 255, 0.08);
-  --doc-surface-bg: rgba(20, 20, 20, 0.76);
+  --glass-saturation: 106%;
+  --glass-highlight: inset 0 1px 0 rgba(224, 244, 237, 0.1);
+  --doc-scene-bg: #1c2425;
+  --doc-scene-wash: rgba(13, 18, 19, 0.62);
+  --doc-scene-glow: rgba(100, 129, 121, 0.13);
+  --doc-main-bg-top: rgba(39, 47, 48, 0.66);
+  --doc-main-bg-bottom: rgba(27, 34, 35, 0.58);
+  --doc-main-sheen: rgba(184, 220, 211, 0.085);
+  --doc-main-border: rgba(179, 208, 199, 0.17);
+  --doc-main-shadow: 0 34px 86px rgba(0, 0, 0, 0.48), 0 10px 28px
+    rgba(0, 0, 0, 0.3);
+  --doc-aux-bg: rgba(25, 31, 32, 0.36);
+  --doc-aux-bg-hover: rgba(31, 38, 39, 0.48);
+  --doc-aux-border: rgba(188, 214, 206, 0.09);
+  --doc-aux-highlight: inset 0 1px 0 rgba(220, 241, 234, 0.065);
+  --doc-aux-shadow: 0 14px 38px rgba(0, 0, 0, 0.22);
+  --doc-inset-bg: rgba(199, 224, 216, 0.055);
+  --doc-inset-border: rgba(185, 211, 203, 0.1);
+  --doc-active-bg: rgba(116, 163, 150, 0.12);
+  --doc-active-text: #8fc8ba;
+  --doc-chrome-bg: rgba(20, 25, 26, 0.8);
+  --doc-chrome-border: rgba(201, 224, 216, 0.08);
+  --doc-chrome-shadow: 0 9px 30px rgba(0, 0, 0, 0.3);
+  --doc-control-bg: rgba(190, 216, 208, 0.055);
+  --doc-control-border: rgba(198, 222, 215, 0.1);
   --heading-h1-color: #80d8ff;
   --heading-h2-color: #71e6c9;
   --heading-h3-color: #bba4ff;
