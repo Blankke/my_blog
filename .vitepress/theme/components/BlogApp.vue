@@ -31,6 +31,7 @@ import HomeGalleryInfo from './HomeGalleryInfo.vue';
 import HomeGalleryTags from './HomeGalleryTags.vue';
 import HomePostCategories from './HomePostCategories.vue';
 import HomePostTags from './HomePostTags.vue';
+import NavbarLetterSwap from './NavbarLetterSwap.vue';
 import NavbarLimelight from './NavbarLimelight.vue';
 import TiltCards from './TiltCards.vue';
 
@@ -169,6 +170,7 @@ watch(
     <template #nav-bar-content-before>
       <slot name="nav-bar-content-before" />
       <ClientOnly>
+        <NavbarLetterSwap />
         <NavbarLimelight :active-target="activeNavTarget" />
       </ClientOnly>
     </template>
@@ -178,7 +180,7 @@ watch(
       <div class="home">
         <BlogHomeHeaderAvatar />
         <div class="header-banner">
-          <BlogHomeTitle />
+          <BlogHomeTitle :gallery="isGalleryView" />
         </div>
         <HomeAudioPlayer />
         <div class="content-wrapper">
@@ -224,7 +226,19 @@ watch(
     </template>
 
     <template #layout-bottom>
-      <BlogFooter v-if="layout === 'home'" />
+      <div v-if="layout === 'home'" class="blog-footer-stage">
+        <BlogFooter />
+        <img
+          class="blog-footer-stamp"
+          src="/brand/stamp.png"
+          alt=""
+          width="1254"
+          height="1254"
+          loading="lazy"
+          decoding="async"
+          aria-hidden="true"
+        />
+      </div>
       <slot name="layout-bottom" />
     </template>
 
@@ -354,6 +368,31 @@ watch(
   width: 100%;
 }
 
+.blog-footer-stage {
+  position: relative;
+  isolation: isolate;
+}
+
+.blog-footer-stamp {
+  position: absolute;
+  z-index: 1;
+  right: max(
+    24px,
+    calc(clamp(24px, 17vw, 330px) - clamp(54px, 3.6vw, 69px))
+  );
+  bottom: -5px;
+  display: block;
+  width: clamp(216px, 14.4vw, 276px);
+  height: auto;
+  opacity: 0.9;
+  filter: saturate(1.04) contrast(1.04)
+    drop-shadow(0 4px 5px rgba(78, 0, 16, 0.2));
+  pointer-events: none;
+  user-select: none;
+  transform: rotate(-11deg);
+  transform-origin: 50% 50%;
+}
+
 @media screen and (max-width: 959px) {
   .blog-info-wrapper {
     margin-left: var(--layout-home-sidebar-gap);
@@ -363,6 +402,14 @@ watch(
 }
 
 @media screen and (max-width: 767px) {
+  .blog-footer-stamp {
+    right: 0;
+    bottom: -5px;
+    width: clamp(152px, 36vw, 204px);
+    opacity: 0.82;
+    transform: rotate(-9deg);
+  }
+
   .header-banner {
     padding: var(--layout-home-banner-padding-mobile);
   }

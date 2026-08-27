@@ -1,0 +1,65 @@
+.navbar-letter-swap-mount {
+  display: none;
+}
+
+.navbar-letter-swap__accessible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (min-width: 768px) {
+  html:not(.dark) .VPNavBarMenu > :is(.VPNavBarMenuLink, .VPNavBarMenuGroup) {
+    font-family: "Comic Sans MS", "Comic Sans", "Comic Neue",
+      var(--font-family-base);
+  }
+
+  .navbar-letter-swap {
+    position: relative;
+    display: inline-grid;
+    overflow: hidden;
+    align-items: center;
+    line-height: 1.2;
+    vertical-align: middle;
+  }
+
+  .navbar-letter-swap__measure,
+  .navbar-letter-swap__visual {
+    grid-area: 1 / 1;
+    white-space: pre;
+  }
+
+  .navbar-letter-swap__measure {
+    visibility: hidden;
+  }
+
+  .navbar-letter-swap__visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .navbar-letter-swap__cell {
+    position: relative;
+    display: inline-flex;
+    white-space: pre;
+  }
+
+  .navbar-letter-swap__letter {
+    display: inline-block;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+  }
+
+  .navbar-letter-swap__letter--secondary {
+    position: absolute;
+    inset: 0 auto auto 0;
+    transform: translate3d(0, -150%, 0);
+  }
+}

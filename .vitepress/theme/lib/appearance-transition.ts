@@ -15,6 +15,8 @@ type ThemeToggleEvent = MouseEvent | undefined;
 
 interface ViewTransitionController {
   ready: Promise<void>;
+  finished: Promise<void>;
+  skipTransition?: () => void;
 }
 
 type ViewTransitionDocument = Document & {
@@ -44,6 +46,9 @@ export function useAppearanceTransition(enableTransition = true) {
   const canAnimateAppearance = ref(false);
 
   let mediaQuery: MediaQueryList | undefined;
+  let appearanceTransition: ViewTransitionController | undefined;
+  let revealAnimation: Animation | undefined;
+  let transitionRunning = false;
 
   const syncAvailability = () => {
     canAnimateAppearance.value = canUseViewTransition(enableTransition);
@@ -52,12 +57,20 @@ export function useAppearanceTransition(enableTransition = true) {
   provide('toggle-appearance', async (event: ThemeToggleEvent) => {
     syncAvailability();
 
+    // Do not let a second click create another pair of theme snapshots while
+    // the first pair is still being composited. Overlapping transitions are
+    // the usual cause of a one-frame old-theme flash at the end.
+    if (transitionRunning) {
+      return;
+    }
+
     if (!canAnimateAppearance.value) {
       isDark.value = !isDark.value;
       return;
     }
 
     const transitionDocument = document as ViewTransitionDocument;
+    const nextIsDark = !isDark.value;
     const x = event?.clientX ?? window.innerWidth / 2;
     const y = event?.clientY ?? window.innerHeight / 2;
     const endRadius = Math.hypot(
@@ -69,23 +82,51 @@ export function useAppearanceTransition(enableTransition = true) {
       `circle(${endRadius}px at ${x}px ${y}px)`,
     ];
 
-    const transition = transitionDocument.startViewTransition?.(async () => {
-      isDark.value = !isDark.value;
-      await nextTick();
-    });
+    transitionRunning = true;
+    document.documentElement.dataset.appearanceTransition = 'running';
 
-    await transition?.ready;
+    try {
+      appearanceTransition = transitionDocument.startViewTransition?.(
+        async () => {
+          isDark.value = nextIsDark;
+          await nextTick();
+        },
+      );
 
-    document.documentElement.animate(
-      {
-        clipPath: isDark.value ? [...clipPath].reverse() : clipPath,
-      },
-      {
-        duration: 320,
-        easing: 'ease-in',
-        pseudoElement: `::view-transition-${isDark.value ? 'old' : 'new'}(root)`,
-      },
-    );
+      if (!appearanceTransition) {
+        isDark.value = nextIsDark;
+        return;
+      }
+
+      await appearanceTransition.ready;
+
+      revealAnimation = document.documentElement.animate(
+        {
+          clipPath: nextIsDark ? [...clipPath].reverse() : clipPath,
+        },
+        {
+          duration: 320,
+          easing: 'ease-in',
+          // Keep the terminal clip until View Transition removes its snapshot.
+          // Without this, the old snapshot can become full-screen for one frame.
+          fill: 'both',
+          pseudoElement: `::view-transition-${nextIsDark ? 'old' : 'new'}(root)`,
+        },
+      );
+
+      await revealAnimation.finished;
+      await appearanceTransition.finished;
+    } catch {
+      // A browser can abort a transition when the page loses visibility. The
+      // requested appearance should still be the final application state.
+      isDark.value = nextIsDark;
+    } finally {
+      revealAnimation?.cancel();
+      revealAnimation = undefined;
+      appearanceTransition = undefined;
+      transitionRunning = false;
+      delete document.documentElement.dataset.appearanceTransition;
+    }
   });
 
   const handleMotionPreferenceChange = () => {
@@ -106,6 +147,10 @@ export function useAppearanceTransition(enableTransition = true) {
   });
 
   onBeforeUnmount(() => {
+    revealAnimation?.cancel();
+    appearanceTransition?.skipTransition?.();
+    delete document.documentElement.dataset.appearanceTransition;
+
     if (!mediaQuery) {
       return;
     }

@@ -34,17 +34,23 @@ function getTopLevelItems() {
 }
 
 function positionLimelight() {
+  const items = getTopLevelItems();
+  for (const item of items) {
+    item.removeAttribute('data-nav-current');
+  }
+
   if (!menu || !limelight || !props.activeTarget) {
     limelight?.removeAttribute('data-visible');
     return;
   }
 
-  const activeItem = getTopLevelItems()[targetIndexes[props.activeTarget]];
+  const activeItem = items[targetIndexes[props.activeTarget]];
   if (!activeItem) {
     limelight.removeAttribute('data-visible');
     return;
   }
 
+  activeItem.dataset.navCurrent = '';
   const left = activeItem.offsetLeft + activeItem.offsetWidth / 2;
   limelight.style.setProperty('--nav-limelight-x', `${left}px`);
   limelight.dataset.visible = '';
@@ -100,6 +106,9 @@ onBeforeUnmount(() => {
   cancelAnimationFrame(animationFrame);
   window.removeEventListener('resize', queuePosition);
   resizeObserver?.disconnect();
+  for (const item of getTopLevelItems()) {
+    item.removeAttribute('data-nav-current');
+  }
   limelight?.remove();
 });
 </script>

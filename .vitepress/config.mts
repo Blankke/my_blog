@@ -39,21 +39,21 @@ export default defineConfig({
 
     logo: '/avatar.png',
     nav: [
-      { text: '首页', link: '/' },
+      { text: 'Home', link: '/' },
       {
-        text: '文章',
+        text: 'Articles',
         items: [
-          { text: '文章归档', link: '/posts/' },
+          { text: 'Archive', link: '/posts/' },
           {
-            text: '2025春操作系统课程笔记',
+            text: 'Spring 2025 OS Course Notes',
             link: '/posts/2025春操作系统课程笔记/',
           },
-          { text: 'Matmul Fusion 专题', link: '/posts/Matmul Fusion/' },
-          { text: 'MIT S081 专题', link: '/posts/S081 xv6-labs-2021/' },
+          { text: 'Matmul Fusion Series', link: '/posts/Matmul Fusion/' },
+          { text: 'MIT S081 Series', link: '/posts/S081 xv6-labs-2021/' },
         ],
       },
-      { text: '画廊', link: '/?view=gallery' },
-      { text: '关于', link: '/about' },
+      { text: 'Gallery', link: '/?view=gallery' },
+      { text: 'About', link: '/about' },
     ],
     socialLinks: [
       {
@@ -78,6 +78,10 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [pdfPostsPlugin(), obsidianCompatPlugin(), siteAudioLibraryPlugin()],
+    plugins: [
+      pdfPostsPlugin(),
+      obsidianCompatPlugin(),
+      siteAudioLibraryPlugin(),
+    ],
   },
 });

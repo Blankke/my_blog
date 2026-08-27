@@ -29,6 +29,39 @@ html.dark {
     z-index: 1;
   }
 
+  /*
+   * VitePress marks both Home and Gallery active on `/?view=gallery` and its
+   * link/flyout components ship different hover colors. The client-side
+   * `data-nav-current` marker is our single source of truth for all four top
+   * level items, so active, hover and limelight can never disagree.
+   */
+  .VPNavBarMenu > .VPNavBarMenuLink,
+  .VPNavBarMenu > .VPNavBarMenuGroup > .button > .text {
+    color: var(--vp-c-text-1) !important;
+    font-weight: 500 !important;
+    transition: color 220ms ease;
+  }
+
+  .VPNavBarMenu
+    > .VPNavBarMenuLink:not([data-nav-current]):hover:not(
+      [data-letter-swap-running]
+    ),
+  .VPNavBarMenu
+    > .VPNavBarMenuGroup:not([data-nav-current]):hover:not(
+      [data-letter-swap-running]
+    )
+    > .button
+    > .text {
+    color: var(--vp-c-text-2) !important;
+  }
+
+  .VPNavBarMenu > .VPNavBarMenuLink[data-nav-current],
+  .VPNavBarMenu > .VPNavBarMenuGroup[data-nav-current] > .button > .text,
+  .VPNavBarMenu > .VPNavBarMenuGroup[data-nav-current]:hover > .button > .text {
+    color: var(--nav-limelight-text) !important;
+    font-weight: 600 !important;
+  }
+
   .navbar-limelight {
     --nav-limelight-x: 0px;
     position: absolute;
@@ -80,23 +113,6 @@ html.dark {
       color-mix(in srgb, var(--nav-limelight-beam) 26%, transparent) 62%,
       transparent
     );
-  }
-
-  .VPNavBarMenu > .VPNavBarMenuLink.active,
-  .VPNavBarMenu > .VPNavBarMenuGroup.active .text,
-  html:not([data-home-view="gallery"]) .VPNavBarMenuLink[href="/"].active,
-  html[data-home-view="gallery"]
-    .VPNavBarMenu
-    > .VPNavBarMenuLink[href="/?view=gallery"] {
-    color: var(--nav-limelight-text) !important;
-    font-weight: 600 !important;
-  }
-
-  html[data-home-view="gallery"]
-    .VPNavBarMenu
-    > .VPNavBarMenuLink[href="/"].active {
-    color: var(--vp-c-text-2) !important;
-    font-weight: 500 !important;
   }
 }
 
