@@ -5,6 +5,7 @@ tags:
   - x86
   - multi-core
 ---
+# StarryOS 多核的deferred wake 问题
 ## 问题背景
 假设任务 `T` 正在 CPU 1 上运行。
 - 当 `T` 调用 sleep、等待条件变量或者进入其他阻塞操作时，大致执行：
