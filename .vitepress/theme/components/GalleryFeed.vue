@@ -130,43 +130,6 @@ function stripFrontmatter(source: string) {
   return frontmatter ? source.slice(frontmatter[0].length) : source;
 }
 
-function normalizeAssetPath(source: string) {
-  try {
-    return decodeURIComponent(new URL(source, window.location.href).pathname);
-  } catch {
-    return source;
-  }
-}
-
-// The expanded visual already carries the cover. Keep every later image, but
-// avoid repeating that same cover at the top of the reading column.
-function stripRepeatedCover(html: string, cover: string) {
-  if (!cover) {
-    return html;
-  }
-
-  const articleDoc = new DOMParser().parseFromString(html, 'text/html');
-  const firstImage = articleDoc.body.querySelector<HTMLImageElement>('img');
-  if (
-    !firstImage ||
-    normalizeAssetPath(firstImage.getAttribute('src') || '') !==
-      normalizeAssetPath(cover)
-  ) {
-    return html;
-  }
-
-  const wrapper = firstImage.closest('p, figure');
-  firstImage.remove();
-  if (
-    wrapper &&
-    !wrapper.textContent?.trim() &&
-    !wrapper.querySelector('img')
-  ) {
-    wrapper.remove();
-  }
-  return articleDoc.body.innerHTML;
-}
-
 function isModifiedClick(event: MouseEvent) {
   return event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
 }
@@ -243,7 +206,8 @@ async function openReader(item: GalleryItem) {
     }
 
     if (articleRequestController === requestController) {
-      activeHtml.value = stripRepeatedCover(html, item.cover);
+      // 阅读区保留包括头图在内的全部图片，以统一宽度按原始比例展示。
+      activeHtml.value = html;
     }
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
@@ -1089,7 +1053,7 @@ onBeforeUnmount(() => {
 
 .gallery-reader-cover {
   display: block;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .gallery-reader-cover-placeholder {

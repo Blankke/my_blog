@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Build reproducible gallery images:
-# - input:  gallery/candidates/* (snapshot at script start)
-# - output: gallery/images/*.avif
-# - size:   2400x1600 (3:2), full image contained over a softened backdrop
+# 使用示例：
+#   将待处理图片放入 gallery/candidates/，然后执行：
+#   bash scripts/build-gallery-images.sh
+#
+# 处理规则：
+# - 输入：gallery/candidates/*（脚本启动时获取文件列表）
+# - 输出：gallery/images/*.avif
+# - 尺寸：保留原图像素尺寸与宽高比，仅根据 EXIF 修正方向
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -39,23 +43,9 @@ for src in "${SOURCES[@]}"; do
 
   echo "Compressing: $filename"
   convert \
-    \( "$src" \
-      -auto-orient \
-      -strip \
-      -resize "2400x1600^" \
-      -gravity center \
-      -extent "2400x1600" \
-      -blur "0x52" \
-      -modulate "72,90,100" \
-    \) \
-    \( "$src" \
-      -auto-orient \
-      -strip \
-      -resize "2400x1600" \
-    \) \
-    -gravity center \
-    -compose over \
-    -composite \
+    "$src" \
+    -auto-orient \
+    -strip \
     -quality 45 \
     "$tmp"
 
