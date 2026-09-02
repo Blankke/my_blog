@@ -19,6 +19,22 @@ html.dark {
 }
 
 @media (min-width: 768px) {
+  /*
+   * 圆形主题转场会让深浅色按钮在 40px 与 22px 之间变形。
+   * 外层固定占位后，按钮只在槽位内部变化，不再推动导航和社交图标。
+   */
+  .VPNavBarAppearance {
+    flex: 0 0 40px;
+    justify-content: center;
+    width: 40px;
+    min-width: 40px;
+  }
+
+  .VPNavBarAppearance .VPSwitchAppearance {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
   .VPNavBarMenu {
     position: relative;
     isolation: isolate;
@@ -29,12 +45,7 @@ html.dark {
     z-index: 1;
   }
 
-  /*
-   * VitePress marks both Home and Gallery active on `/?view=gallery` and its
-   * link/flyout components ship different hover colors. The client-side
-   * `data-nav-current` marker is our single source of truth for all four top
-   * level items, so active, hover and limelight can never disagree.
-   */
+  /* 客户端标记统一控制四个一级导航项的高亮、悬停与追光位置。 */
   .VPNavBarMenu > .VPNavBarMenuLink,
   .VPNavBarMenu > .VPNavBarMenuGroup > .button > .text {
     color: var(--vp-c-text-1) !important;

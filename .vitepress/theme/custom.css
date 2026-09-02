@@ -8,22 +8,7 @@
 @import "./styles/navbar-letter-swap.css";
 @import "./styles/card-spotlight.css";
 @import "./styles/tilt-cards.css";
-
-html:not([data-home-view="gallery"])
-  .VPNavScreenMenuLink.active[href="/?view=gallery"] {
-  color: var(--vp-c-text-1) !important;
-  font-weight: 400 !important;
-}
-
-html[data-home-view="gallery"] .VPNavScreenMenuLink[href="/"] {
-  color: var(--vp-c-text-1) !important;
-  font-weight: 400 !important;
-}
-
-html[data-home-view="gallery"] .VPNavScreenMenuLink[href="/?view=gallery"] {
-  color: var(--vp-c-brand-1) !important;
-  font-weight: 600;
-}
+@import "./styles/motion-control.css";
 
 /* Keep manual line breaks for poetry blockquotes on gallery pages only. */
 html[data-route-section="gallery"] .VPDoc .content main .vp-doc blockquote p {

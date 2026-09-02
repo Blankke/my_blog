@@ -3,8 +3,17 @@ import { useBrowserLocation } from '@vueuse/core';
 import { useRoute, useRouter } from 'vitepress';
 import { computed, ref, watch } from 'vue';
 import { tagsSvgStr } from '../../../node_modules/@sugarat/theme/src/constants/svg';
-import { type ThemeArticle, isGalleryArticle, isVisibleArticle } from '../lib/articles';
-import { Tag, useActiveTag, useArticles, useCurrentPageNum } from '../lib/sugarat';
+import {
+  type ThemeArticle,
+  isPostArticle,
+  isVisibleArticle,
+} from '../lib/articles';
+import {
+  Tag,
+  useActiveTag,
+  useArticles,
+  useCurrentPageNum,
+} from '../lib/sugarat';
 
 const articles = useArticles();
 const route = useRoute();
@@ -19,7 +28,7 @@ const tagsWithCount = computed(() => {
 
   for (const article of articles.value) {
     if (
-      isGalleryArticle(article as ThemeArticle) ||
+      !isPostArticle(article as ThemeArticle) ||
       !isVisibleArticle(article as ThemeArticle)
     ) {
       continue;
@@ -52,7 +61,9 @@ function handleTagClick(tag: string, type: string) {
   activeTag.value.type = type;
   activeTag.value.label = tag;
   currentPage.value = 1;
-  router.go(`${location.value.origin}${router.route.path}?tag=${tag}&type=${type}`);
+  router.go(
+    `${location.value.origin}${router.route.path}?tag=${tag}&type=${type}`,
+  );
 }
 
 function handleCloseTag() {
@@ -79,6 +90,10 @@ watch(
 watch(
   route,
   () => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     if (!new URLSearchParams(window.location.search).get('tag')) {
       activeTag.value.type = '';
       activeTag.value.label = '';

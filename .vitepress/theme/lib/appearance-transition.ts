@@ -1,6 +1,7 @@
 /**
  * 用法示例：
- * const { canAnimateAppearance } = useAppearanceTransition(true);
+ * const { motionEnabled } = useMotionPreference();
+ * const { canAnimateAppearance } = useAppearanceTransition(true, motionEnabled);
  * <Layout :class="{ 'blog-theme-layout': canAnimateAppearance }" />
  *
  * 说明：
@@ -9,7 +10,15 @@
  * 不支持时退回到 VitePress 默认开关动画，避免 Windows 下出现“完全没动效”的体验。
  */
 import { useData } from 'vitepress';
-import { nextTick, onBeforeUnmount, onMounted, provide, ref } from 'vue';
+import {
+  type Ref,
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  provide,
+  ref,
+} from 'vue';
 
 type ThemeToggleEvent = MouseEvent | undefined;
 
@@ -25,41 +34,38 @@ type ViewTransitionDocument = Document & {
   ) => ViewTransitionController;
 };
 
-function canUseViewTransition(enableTransition: boolean) {
-  if (
-    !enableTransition ||
-    typeof window === 'undefined' ||
-    typeof document === 'undefined'
-  ) {
+function supportsViewTransition() {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
     return false;
   }
 
   const transitionDocument = document as ViewTransitionDocument;
-  return (
-    typeof transitionDocument.startViewTransition === 'function' &&
-    window.matchMedia('(prefers-reduced-motion: no-preference)').matches
-  );
+  return typeof transitionDocument.startViewTransition === 'function';
 }
 
-export function useAppearanceTransition(enableTransition = true) {
+export function useAppearanceTransition(
+  enableTransition: boolean,
+  motionEnabled: Readonly<Ref<boolean>>,
+) {
   const { isDark } = useData();
-  const canAnimateAppearance = ref(false);
+  const viewTransitionSupported = ref(false);
+  const canAnimateAppearance = computed(
+    () =>
+      enableTransition && motionEnabled.value && viewTransitionSupported.value,
+  );
 
-  let mediaQuery: MediaQueryList | undefined;
   let appearanceTransition: ViewTransitionController | undefined;
   let revealAnimation: Animation | undefined;
   let transitionRunning = false;
 
   const syncAvailability = () => {
-    canAnimateAppearance.value = canUseViewTransition(enableTransition);
+    viewTransitionSupported.value = supportsViewTransition();
   };
 
   provide('toggle-appearance', async (event: ThemeToggleEvent) => {
     syncAvailability();
 
-    // Do not let a second click create another pair of theme snapshots while
-    // the first pair is still being composited. Overlapping transitions are
-    // the usual cause of a one-frame old-theme flash at the end.
+    // 首次主题截图合成完成前忽略重复点击，避免重叠转场在末尾闪回旧主题。
     if (transitionRunning) {
       return;
     }
@@ -73,10 +79,11 @@ export function useAppearanceTransition(enableTransition = true) {
     const nextIsDark = !isDark.value;
     const x = event?.clientX ?? window.innerWidth / 2;
     const y = event?.clientY ?? window.innerHeight / 2;
-    const endRadius = Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y),
-    );
+    const endRadius =
+      Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y),
+      ) + 2;
     const clipPath = [
       `circle(0px at ${x}px ${y}px)`,
       `circle(${endRadius}px at ${x}px ${y}px)`,
@@ -105,10 +112,9 @@ export function useAppearanceTransition(enableTransition = true) {
           clipPath: nextIsDark ? [...clipPath].reverse() : clipPath,
         },
         {
-          duration: 320,
-          easing: 'ease-in',
-          // Keep the terminal clip until View Transition removes its snapshot.
-          // Without this, the old snapshot can become full-screen for one frame.
+          duration: 460,
+          easing: 'cubic-bezier(0.32, 0.72, 0, 1)',
+          // 保持末帧裁剪，直到 View Transition 移除截图，避免旧截图短暂恢复为全屏。
           fill: 'both',
           pseudoElement: `::view-transition-${nextIsDark ? 'old' : 'new'}(root)`,
         },
@@ -117,8 +123,7 @@ export function useAppearanceTransition(enableTransition = true) {
       await revealAnimation.finished;
       await appearanceTransition.finished;
     } catch {
-      // A browser can abort a transition when the page loses visibility. The
-      // requested appearance should still be the final application state.
+      // 页面失去可见性时浏览器可能中止转场，主题状态仍应落到用户请求的结果。
       isDark.value = nextIsDark;
     } finally {
       revealAnimation?.cancel();
@@ -129,38 +134,14 @@ export function useAppearanceTransition(enableTransition = true) {
     }
   });
 
-  const handleMotionPreferenceChange = () => {
-    syncAvailability();
-  };
-
   onMounted(() => {
     syncAvailability();
-
-    mediaQuery = window.matchMedia('(prefers-reduced-motion: no-preference)');
-
-    if (typeof mediaQuery.addEventListener === 'function') {
-      mediaQuery.addEventListener('change', handleMotionPreferenceChange);
-      return;
-    }
-
-    mediaQuery.addListener(handleMotionPreferenceChange);
   });
 
   onBeforeUnmount(() => {
     revealAnimation?.cancel();
     appearanceTransition?.skipTransition?.();
     delete document.documentElement.dataset.appearanceTransition;
-
-    if (!mediaQuery) {
-      return;
-    }
-
-    if (typeof mediaQuery.removeEventListener === 'function') {
-      mediaQuery.removeEventListener('change', handleMotionPreferenceChange);
-      return;
-    }
-
-    mediaQuery.removeListener(handleMotionPreferenceChange);
   });
 
   return {

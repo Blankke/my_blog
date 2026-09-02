@@ -55,6 +55,10 @@ export function isGalleryArticle(article: ThemeArticle) {
   return isArticleInSection(article, GALLERY_SECTION);
 }
 
+export function isPostArticle(article: ThemeArticle) {
+  return isArticleInSection(article, POSTS_SECTION);
+}
+
 export function isVisibleArticle(article: ThemeArticle) {
   return article.meta.hidden !== true;
 }

@@ -43,7 +43,7 @@ npm run clean
 ├── posts/                   # 普通文章与专题
 │   ├── index.md             # 全站文章归档
 │   └── 专题名/index.md       # 专题介绍页
-├── gallery/                 # 画廊作品，目录约定与 posts/ 一致
+├── gallery/                 # 独立画廊栏目，index.md 为栏目入口
 ├── public/                  # 图片、音频、品牌素材等静态资源
 ├── scripts/                 # 可复现的资源处理脚本
 └── .vitepress/
@@ -52,7 +52,7 @@ npm run clean
     └── theme/               # 页面组件、交互逻辑与样式
 ```
 
-普通文章放在 `posts/`，画廊作品放在 `gallery/`。一级目录会成为首页分类；目录中的 `index.md` 用于设置分类名称和撰写专题介绍，不参与普通文章流。专题页下的文章列表由站点自动生成。
+普通文章放在 `posts/`，画廊作品放在 `gallery/`。两个栏目分别生成内容流、分类与标签；一级目录会成为各自栏目的分类。专题目录中的 `index.md` 用于设置分类名称和撰写专题介绍，不参与普通内容流。专题页下的文章列表由站点自动生成。
 
 文章使用 YAML frontmatter 描述元数据：
 
@@ -73,7 +73,7 @@ tags:
 ## 站点能力
 
 - 首页按 `posts/` 一级目录自动生成文章分类，并提供最近文章与标签浏览。
-- Gallery 通过首页内视图切换呈现，内容来自 `gallery/`，拥有独立的分类、标签和瀑布流。
+- Gallery 使用独立的 `/gallery/` 路径，内容来自 `gallery/`，拥有自己的分类、标签和瀑布流。
 - 播放器自动扫描 `public/audio/home/`，无需逐首维护配置。
 - `posts/` 内的 PDF 会随构建发布；同名 Markdown 可作为 PDF 的介绍或阅读笔记。
 - 兼容常用 Obsidian 图片链接、callout 与代码围栏写法。

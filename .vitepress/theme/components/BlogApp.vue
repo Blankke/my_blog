@@ -1,9 +1,9 @@
 <script setup lang="ts" name="BlogApp">
 import { useData, useRoute } from 'vitepress';
 import Theme from 'vitepress/theme';
-import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useAppearanceTransition } from '../lib/appearance-transition';
-import { useHomeView } from '../lib/home-view';
+import { useMotionPreferenceController } from '../lib/motion-preference';
 import {
   BlogAlert,
   BlogArticleAnalyze,
@@ -31,6 +31,7 @@ import HomeGalleryInfo from './HomeGalleryInfo.vue';
 import HomeGalleryTags from './HomeGalleryTags.vue';
 import HomePostCategories from './HomePostCategories.vue';
 import HomePostTags from './HomePostTags.vue';
+import MotionToggle from './MotionToggle.vue';
 import NavbarLetterSwap from './NavbarLetterSwap.vue';
 import NavbarLimelight from './NavbarLimelight.vue';
 import TiltCards from './TiltCards.vue';
@@ -42,10 +43,18 @@ const isBlogTheme = useBlogThemeMode();
 const { Layout } = Theme;
 
 const blogInfoCollapsible = useBlogInfoCollapsible();
-const { isGalleryView, isHomeRoute, setView, view } = useHomeView();
+const { motionEnabled } = useMotionPreferenceController();
+
+// Home 与 Gallery 使用独立路由，页面只挂载当前栏目的内容组件。
+const isGalleryLandingPage = computed(() => {
+  return route.path === '/gallery/' || route.path === '/gallery/index.html';
+});
 
 const openTransition = useDarkTransitionConfig();
-const { canAnimateAppearance } = useAppearanceTransition(openTransition);
+const { canAnimateAppearance } = useAppearanceTransition(
+  openTransition,
+  motionEnabled,
+);
 const enableTransitionStyles = computed(
   () => openTransition && canAnimateAppearance.value,
 );
@@ -53,8 +62,8 @@ const enableTransitionStyles = computed(
 const activeNavTarget = computed<
   'home' | 'articles' | 'gallery' | 'about' | null
 >(() => {
-  if (isHomeRoute.value) {
-    return isGalleryView.value ? 'gallery' : 'home';
+  if (route.path === '/' || route.path === '/index.html') {
+    return 'home';
   }
 
   if (route.path === '/gallery/' || route.path.startsWith('/gallery/')) {
@@ -71,61 +80,6 @@ const activeNavTarget = computed<
 
   return null;
 });
-
-function handleHomeViewNavClick(event: MouseEvent) {
-  if (!isHomeRoute.value) {
-    return;
-  }
-
-  const target = event.target;
-  if (!(target instanceof Element)) {
-    return;
-  }
-
-  const link = target.closest<HTMLAnchorElement>(
-    'a.VPNavBarMenuLink[href="/"], a.VPNavBarMenuLink[href="/?view=gallery"], a.VPNavScreenMenuLink[href="/"], a.VPNavScreenMenuLink[href="/?view=gallery"]',
-  );
-
-  if (!link) {
-    return;
-  }
-
-  if (link.getAttribute('href') === '/?view=gallery') {
-    event.preventDefault();
-    setView('gallery');
-    return;
-  }
-
-  if (link.getAttribute('href') === '/' && isGalleryView.value) {
-    event.preventDefault();
-    setView('articles');
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('click', handleHomeViewNavClick);
-});
-
-onBeforeUnmount(() => {
-  document.removeEventListener('click', handleHomeViewNavClick);
-});
-
-watch(
-  view,
-  (nextView) => {
-    if (typeof document === 'undefined') {
-      return;
-    }
-
-    if (nextView === 'gallery') {
-      document.documentElement.dataset.homeView = 'gallery';
-      return;
-    }
-
-    delete document.documentElement.dataset.homeView;
-  },
-  { immediate: true },
-);
 
 watch(
   () => route.path,
@@ -152,9 +106,9 @@ watch(
       <ClientOnly>
         <DocSidebarResizer />
         <CalloutEnhancer />
-        <CardSpotlight />
-        <TiltCards />
-        <BlogOml2d />
+        <CardSpotlight v-if="motionEnabled" />
+        <TiltCards v-if="motionEnabled" />
+        <BlogOml2d v-if="motionEnabled" />
         <BlogAlert />
       </ClientOnly>
     </template>
@@ -170,7 +124,7 @@ watch(
     <template #nav-bar-content-before>
       <slot name="nav-bar-content-before" />
       <ClientOnly>
-        <NavbarLetterSwap />
+        <NavbarLetterSwap v-if="motionEnabled" />
         <NavbarLimelight :active-target="activeNavTarget" />
       </ClientOnly>
     </template>
@@ -180,19 +134,24 @@ watch(
       <div class="home">
         <BlogHomeHeaderAvatar />
         <div class="header-banner">
-          <BlogHomeTitle :gallery="isGalleryView" />
+          <BlogHomeTitle :gallery="isGalleryLandingPage" />
+          <div class="home-motion-control">
+            <ClientOnly>
+              <MotionToggle />
+            </ClientOnly>
+          </div>
         </div>
         <HomeAudioPlayer />
         <div class="content-wrapper">
           <div class="blog-list-wrapper">
-            <div v-show="!isGalleryView">
-              <HomePostCategories />
-              <HomeFeed />
-            </div>
-            <div v-show="isGalleryView">
+            <template v-if="isGalleryLandingPage">
               <HomeGalleryCategories />
               <GalleryFeed embedded />
-            </div>
+            </template>
+            <template v-else>
+              <HomePostCategories />
+              <HomeFeed />
+            </template>
           </div>
           <div
             :class="{
@@ -200,13 +159,13 @@ watch(
             }"
             class="blog-info-wrapper"
           >
-            <template v-if="!isGalleryView">
-              <BlogHomeInfo />
-              <HomePostTags />
-            </template>
-            <template v-else>
+            <template v-if="isGalleryLandingPage">
               <HomeGalleryInfo />
               <HomeGalleryTags />
+            </template>
+            <template v-else>
+              <BlogHomeInfo />
+              <HomePostTags />
             </template>
           </div>
         </div>
@@ -338,8 +297,21 @@ watch(
 }
 
 .header-banner {
+  position: relative;
   width: 100%;
   padding: var(--layout-home-banner-padding);
+}
+
+.home-motion-control {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 40px;
+  min-height: 22px;
 }
 
 .content-wrapper {
@@ -412,6 +384,13 @@ watch(
 
   .header-banner {
     padding: var(--layout-home-banner-padding-mobile);
+  }
+
+  .home-motion-control {
+    position: static;
+    justify-content: flex-end;
+    min-height: 22px;
+    margin: 4px 0 12px;
   }
 
   .content-wrapper {

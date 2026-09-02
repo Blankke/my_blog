@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useData, withBase } from 'vitepress';
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+import { useMotionPreference } from '../lib/motion-preference';
 import { useHomeConfig } from '../lib/sugarat';
 import SplitText from './SplitText.vue';
 
@@ -15,10 +16,11 @@ const props = withDefaults(
   },
 );
 
-const quoteExitDuration = 660;
+const quoteExitDuration = 620;
 
 const { site, frontmatter } = useData();
 const home = useHomeConfig();
+const { motionEnabled } = useMotionPreference();
 
 const name = computed(
   () =>
@@ -96,6 +98,13 @@ async function changeSlogan() {
   transitionRun = run;
   const nextIndex = (inspiringIndex.value + 1) % inspiringList.value.length;
 
+  if (!motionEnabled.value) {
+    inspiringIndex.value = nextIndex;
+    inspiring.value = inspiringList.value[nextIndex] ?? '';
+    transitionKey.value += 1;
+    return;
+  }
+
   quotePhase.value = 'exiting';
   await wait(quoteExitDuration);
   if (!mounted || transitionRun !== run) {
@@ -122,6 +131,13 @@ watch(inspiringList, (quotes) => {
   inspiring.value = quotes[inspiringIndex.value] ?? '';
   transitionKey.value += 1;
   quotePhase.value = 'idle';
+});
+
+watch(motionEnabled, (enabled) => {
+  if (!enabled && quotePhase.value !== 'idle') {
+    transitionRun += 1;
+    quotePhase.value = 'idle';
+  }
 });
 
 onMounted(() => {
@@ -174,9 +190,9 @@ onUnmounted(() => {
           :text="inspiring"
           :phase="quotePhase"
           :transition-key="transitionKey"
-          :max-move="150"
-          :falloff="0.1"
-          :interactive="quotePhase === 'idle'"
+          :max-move="72"
+          :falloff="0.42"
+          :interactive="motionEnabled && quotePhase === 'idle'"
         />
       </button>
     </div>

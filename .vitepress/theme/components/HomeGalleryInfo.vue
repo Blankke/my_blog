@@ -64,10 +64,10 @@ const latestItems = computed(() => {
         <Camera :size="22" aria-hidden="true" />
       </div>
       <div class="gallery-info-copy">
-        <p class="gallery-info-kicker">Gallery Mode</p>
-        <h2 class="gallery-info-title">画廊视图</h2>
+        <p class="gallery-info-kicker">Gallery</p>
+        <h2 class="gallery-info-title">画廊栏目</h2>
         <p class="gallery-info-text">
-          主页保持不动，只把下方内容切成图像流。这里更适合放带封面、带视觉节奏的文章。
+          独立收录带封面、带视觉节奏的内容，与 Home 的文章推荐和标签分别维护。
         </p>
       </div>
     </section>

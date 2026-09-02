@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { ImageIcon } from 'lucide-vue-next';
 import { useData, useRoute, useRouter, withBase } from 'vitepress';
 import { computed, nextTick, watch } from 'vue';
 import {
   type ThemeArticle,
   formatArticleDate,
   getArticleHref,
-  isGalleryArticle,
+  isPostArticle,
   isRecentArticle,
   isVisibleArticle,
   parseArticleDate,
@@ -26,7 +25,6 @@ interface FeedItem {
   dateLabel: string;
   dateValue: string;
   description: string;
-  gallery: boolean;
   href: string;
   pinned: boolean;
   tags: string[];
@@ -57,6 +55,7 @@ const archiveHref = withBase('/posts/');
 const recentArticles = computed(() => {
   const visibleArticles = articles.value.filter(
     (article) =>
+      isPostArticle(article as ThemeArticle) &&
       isVisibleArticle(article as ThemeArticle) &&
       isRecentArticle(article as ThemeArticle, 30) &&
       article.meta.title,
@@ -109,7 +108,6 @@ const currentItems = computed<FeedItem[]>(() => {
       dateLabel: formatArticleDate(article.meta.date),
       dateValue: String(article.meta.date || ''),
       description: article.meta.description || '',
-      gallery: isGalleryArticle(article as ThemeArticle),
       href: getArticleHref(article.route),
       pinned: Number(article.meta.top) > 0,
       tags: normalizeTags(article.meta.tag),
@@ -195,15 +193,10 @@ router.onAfterRouteChange = () => {
         <a
           class="home-feed-card"
           :class="{
-            'home-feed-card--gallery': item.gallery,
             'home-feed-card--pinned': item.pinned,
           }"
           :href="item.href"
         >
-          <span v-if="item.gallery" class="home-feed-gallery-badge" aria-label="画廊文章">
-            <ImageIcon :size="15" aria-hidden="true" />
-          </span>
-
           <div class="home-feed-card-content">
             <div class="home-feed-card-head">
               <h3 class="home-feed-card-title">{{ item.title }}</h3>
@@ -326,26 +319,6 @@ router.onAfterRouteChange = () => {
 
 .home-feed-card--pinned {
   border-color: rgba(224, 165, 73, 0.3);
-}
-
-.home-feed-card--gallery {
-  border-color: rgba(80, 131, 214, 0.22);
-}
-
-.home-feed-gallery-badge {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid rgba(80, 131, 214, 0.22);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.55);
-  color: var(--vp-c-brand-1);
-  backdrop-filter: blur(8px);
 }
 
 .home-feed-card-content {

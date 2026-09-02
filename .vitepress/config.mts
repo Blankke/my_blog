@@ -1,8 +1,28 @@
 import { defineConfig, getThemeConfig } from '@sugarat/theme/node';
 import mathjax3 from 'markdown-it-mathjax3';
 import { siteAudioLibraryPlugin } from './plugins/audio-library';
+import { motionPreferenceCssPlugin } from './plugins/motion-preference-css';
 import { obsidianCompatPlugin } from './plugins/obsidian-compat';
 import { pdfPostsPlugin } from './plugins/pdf-posts';
+
+// 在样式加载前恢复用户选择，避免刷新页面时短暂播放已关闭的动画。
+const motionPreferenceBootstrap = `
+(() => {
+  const storageKey = 'blog-motion-preference';
+  let savedPreference = null;
+
+  try {
+    savedPreference = window.localStorage.getItem(storageKey);
+  } catch {}
+
+  const enabled = savedPreference === 'enabled'
+    || (savedPreference !== 'disabled'
+      && !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  document.documentElement.dataset.motion = enabled ? 'enabled' : 'disabled';
+  document.documentElement.dataset.motionSource = savedPreference === 'enabled'
+    || savedPreference === 'disabled' ? 'user' : 'system';
+})();`;
 
 const theme = getThemeConfig({
   footer: {
@@ -12,11 +32,8 @@ const theme = getThemeConfig({
   },
   themeColor: 'el-blue',
   author: 'Blankke',
-  blog: {
-    // 默认标签面板统计所有文章（含画廊）的标签，已由项目自带的
-    // HomePostTags / HomeGalleryTags 按视图拆分替代，这里关闭。
-    homeTags: false,
-  },
+  // 默认标签面板会合并所有内容，改由两个栏目各自的标签组件负责。
+  homeTags: false,
 });
 
 export default defineConfig({
@@ -26,7 +43,18 @@ export default defineConfig({
   description: '记录学习、实践与一点点开源折腾。',
   lastUpdated: true,
   // 详见：https://vitepress.dev/zh/reference/site-config#head
-  head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
+  head: [
+    [
+      'link',
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '288x288',
+        href: '/favicon.png',
+      },
+    ],
+    ['script', {}, motionPreferenceBootstrap],
+  ],
   cleanUrls: true,
   themeConfig: {
     outline: {
@@ -52,7 +80,7 @@ export default defineConfig({
           { text: 'MIT S081 Series', link: '/posts/S081 xv6-labs-2021/' },
         ],
       },
-      { text: 'Gallery', link: '/?view=gallery' },
+      { text: 'Gallery', link: '/gallery/' },
       { text: 'About', link: '/about' },
     ],
     socialLinks: [
@@ -78,6 +106,11 @@ export default defineConfig({
     },
   },
   vite: {
+    css: {
+      postcss: {
+        plugins: [motionPreferenceCssPlugin()],
+      },
+    },
     plugins: [
       pdfPostsPlugin(),
       obsidianCompatPlugin(),

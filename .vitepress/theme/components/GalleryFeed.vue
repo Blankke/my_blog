@@ -19,6 +19,7 @@ import {
   parseArticleDate,
 } from '../lib/articles';
 import { activeGalleryTag } from '../lib/gallery-tag';
+import { useMotionPreference } from '../lib/motion-preference';
 import { useArticles } from '../lib/sugarat';
 
 const props = withDefaults(
@@ -31,6 +32,7 @@ const props = withDefaults(
 );
 const embedded = computed(() => props.embedded);
 const { isDark } = useData();
+const { motionEnabled } = useMotionPreference();
 
 interface GalleryItem {
   cover: string;
@@ -90,7 +92,7 @@ const activeTagLabel = computed(() => activeGalleryTag.value);
 
 const description = computed(() => {
   if (embedded.value) {
-    return '主页背景保持不动，这里只把内容切到画廊模式，用方形卡片展示所有视觉型文章。';
+    return '这里用方形卡片展示 Gallery 栏目的全部视觉型文章，与 Home 的文章流独立维护。';
   }
 
   return '这里会收纳那些更适合用图像节奏来阅读的文章。把内容放进 gallery/ 目录后，它就会自动出现在这里。';
@@ -267,10 +269,6 @@ function handleReaderKeydown(event: KeyboardEvent) {
   }
 }
 
-function prefersReducedMotion() {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
 function releaseReaderAnimations() {
   for (const animation of readerAnimations) {
     animation.cancel();
@@ -281,6 +279,16 @@ function releaseReaderAnimations() {
 function cancelReaderAnimations() {
   readerAnimationToken += 1;
   releaseReaderAnimations();
+}
+
+function finishReaderAnimations() {
+  for (const animation of readerAnimations) {
+    try {
+      animation.finish();
+    } catch {
+      animation.cancel();
+    }
+  }
 }
 
 function animateElement(
@@ -297,8 +305,7 @@ function interpolate(start: number, end: number, progress: number) {
   return start + (end - start) * progress;
 }
 
-// A lightly under-damped spring sampled into WAAPI frames. It gives the same
-// continuous, shared-layout feeling as Motion without adding a React runtime.
+// 将轻微欠阻尼弹簧采样为 WAAPI 帧，在不引入额外运行时的前提下保持连续的共享布局观感。
 function springProgress(time: number) {
   if (time === 1) {
     return 1;
@@ -393,16 +400,7 @@ async function handleReaderEnter(element: Element, done: () => void) {
   const animationToken = readerAnimationToken;
   const backdrop = root.querySelector<HTMLElement>('.gallery-reader-backdrop');
 
-  if (prefersReducedMotion()) {
-    root.style.opacity = '1';
-    await animateElement(root, [{ opacity: 0 }, { opacity: 1 }], {
-      duration: 140,
-      easing: 'ease-out',
-    });
-    if (animationToken !== readerAnimationToken) {
-      return;
-    }
-    releaseReaderAnimations();
+  if (!motionEnabled.value) {
     root.style.opacity = '1';
     done();
     return;
@@ -499,16 +497,7 @@ async function handleReaderLeave(element: Element, done: () => void) {
   const animationToken = readerAnimationToken;
   const backdrop = root.querySelector<HTMLElement>('.gallery-reader-backdrop');
 
-  if (prefersReducedMotion()) {
-    await animateElement(root, [{ opacity: 1 }, { opacity: 0 }], {
-      duration: 110,
-      easing: 'ease-in',
-      fill: 'both',
-    });
-    if (animationToken !== readerAnimationToken) {
-      return;
-    }
-    releaseReaderAnimations();
+  if (!motionEnabled.value) {
     done();
     return;
   }
@@ -600,6 +589,12 @@ watch(activeItem, (item) => {
 
   if (item) {
     document.body.classList.add('gallery-reader-open');
+  }
+});
+
+watch(motionEnabled, (enabled) => {
+  if (!enabled) {
+    finishReaderAnimations();
   }
 });
 

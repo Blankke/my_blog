@@ -1,13 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Blankke favicon">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1d4ed8" />
-      <stop offset="100%" stop-color="#0f172a" />
-    </linearGradient>
-  </defs>
-  <rect width="128" height="128" rx="28" fill="url(#bg)" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Blankke bookmark">
   <path
-    fill="#f8fafc"
-    d="M36 26h25c17 0 29 9 29 24 0 9-5 16-13 20 11 4 17 12 17 23 0 17-13 27-33 27H36V26Zm22 39c10 0 16-4 16-12 0-8-6-11-16-11H52v23h6Zm4 39c11 0 17-4 17-13 0-9-6-13-18-13H52v26h10Z"
+    d="M28 25L64 19L100 25L98 111L64 76L30 111Z"
+    fill="#173c28"
+    stroke="#102d1e"
+    stroke-width="6"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M35 31L64 26L93 31L92 96L64 67L36 96Z"
+    fill="none"
+    stroke="#d3aa45"
+    stroke-width="5"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M42 99L64 74L86 99L64 82Z"
+    fill="#f6edda"
+  />
+  <path
+    d="M64 42L67 51L76 54L67 57L64 66L61 57L52 54L61 51Z"
+    fill="#d3aa45"
   />
 </svg>

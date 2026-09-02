@@ -1,0 +1,46 @@
+/*
+ * 用户明确关闭动画时，统一覆盖站点与依赖组件的 CSS 动效。
+ * 动画开关本身是状态反馈控件，始终保留昼夜切换动画，确保用户能看见操作结果。
+ */
+html[data-motion="disabled"] *:not(.motion-toggle):not(.motion-toggle *),
+html[data-motion="disabled"]
+  *:not(.motion-toggle):not(.motion-toggle *)::before,
+html[data-motion="disabled"]
+  *:not(.motion-toggle):not(.motion-toggle *)::after {
+  animation-delay: 0s !important;
+  animation-duration: 0s !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-delay: 0s !important;
+  transition-duration: 0s !important;
+}
+
+/*
+ * 主题截图合成期间固定底层样式，避免圆形扩散结束时出现旧主题末帧。
+ * 动画开关不参与主题截图合成，因此同样保持自身状态动画。
+ */
+html[data-appearance-transition="running"]
+  *:not(.motion-toggle):not(.motion-toggle *),
+html[data-appearance-transition="running"]
+  *:not(.motion-toggle):not(.motion-toggle *)::before,
+html[data-appearance-transition="running"]
+  *:not(.motion-toggle):not(.motion-toggle *)::after {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+
+/* 关闭动画时一并移除会造成明显位移的 hover 状态。 */
+html[data-motion="disabled"] .VPDoc .pager-link:hover,
+html[data-motion="disabled"] .VPHome .home-post-category:hover,
+html[data-motion="disabled"] .VPHome .home-gallery-category:hover,
+html[data-motion="disabled"] .VPHome .home-feed-card:hover,
+html[data-motion="disabled"] .folder-post-list-item:hover,
+html[data-motion="disabled"] .gallery-card:hover .gallery-card-media,
+html[data-motion="disabled"] .gallery-card:hover .gallery-card-media img,
+html[data-motion="disabled"] .gallery-info-link:hover,
+html[data-motion="disabled"] .gallery-reader-close:hover,
+html[data-motion="disabled"] .home-audio-collapse:hover,
+html[data-motion="disabled"] .home-audio-icon-button:hover,
+html[data-motion="disabled"] .home-audio-toggle:hover {
+  transform: none !important;
+}
